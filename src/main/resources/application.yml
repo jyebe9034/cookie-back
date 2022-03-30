@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://cookiemonster.cdgpcvesaium.ap-northeast-2.rds.amazonaws.com:5432/cookiemonster
+    username: cookiemonster
+    password: cookie123!
+  main:
+    allow-bean-definition-overriding: true
