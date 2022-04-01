@@ -10,5 +10,11 @@ import javax.persistence.Id;
 public class CommentImage {
 
     @Id
-    private Long seq;
+    private Long commentImageSeq;
+
+    private Long commentSeq;
+
+    private String name;
+
+    private String path;
 }

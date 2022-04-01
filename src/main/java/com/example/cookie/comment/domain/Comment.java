@@ -15,7 +15,7 @@ public class Comment extends BaseDomain {
     @Id
     @Column(name = "comment_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long seq;
+    private Long commentSeq;
 
     @Column(nullable = false)
     private Long boardSeq;
@@ -25,4 +25,7 @@ public class Comment extends BaseDomain {
 
     @Column(nullable = false)
     private String contents;
+
+    @OneToOne
+    private CommentImage commentImage;
 }
