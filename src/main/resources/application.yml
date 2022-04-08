@@ -9,3 +9,9 @@ spring:
     password: cookie123!
   main:
     allow-bean-definition-overriding: true
+
+oauth:
+  kakao:
+    client-id: 4aed26463538748deb5880a9d92033e3
+    client-secret: 6tZFdhBks2utPB0NGuSRX1ygTcYiYkxZ
+    redirect-uri: http://localhost:8080/user/oauth/kakao

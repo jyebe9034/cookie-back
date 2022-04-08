@@ -1,13 +1,17 @@
 package com.example.cookie.user.controller;
 
 import com.example.cookie.common.BaseController;
+import com.example.cookie.oauth.OAuthService;
+import com.example.cookie.oauth.OAuthToken;
 import com.example.cookie.user.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController extends BaseController {
 
     private final UserService service;
+    private final OAuthService oAuthService;
 
     /**
      * 로그인
@@ -33,11 +38,30 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 회원가입
+     * 네이버 로그인
      */
-    @PostMapping("/join")
-    public String join() {
-        return "";
+    @GetMapping("/user/oauth/naver")
+    public String naverOAuth(@RequestParam String code) {
+        return "code: " + code;
+    }
+
+    /**
+     * 카카오 로그인
+     * @return
+     */
+    @GetMapping("/user/oauth/kakao")
+    public ResponseEntity<String> kakaoOAuth(@RequestParam String code) throws JsonProcessingException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> requestKakaoToken = new HttpEntity<>(oAuthService.getKakaoAuthCode(code), headers);
+        String kakaoToken = oAuthService.getKakaoToken(requestKakaoToken).getBody();
+
+        HttpEntity<MultiValueMap<String, String>> requestKakaoProfile = oAuthService.requestKakaoProfile(kakaoToken);
+        ResponseEntity<String> kakaoProfile = oAuthService.getKakaoProfile(requestKakaoProfile);
+
+        // 로그인 or 회원가입
+        return createResponseEntity(service.login(kakaoProfile), kakaoProfile);
     }
 
     /**
