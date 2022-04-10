@@ -35,6 +35,10 @@ dependencies {
 	//querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:5.0.0"
 	implementation "com.querydsl:querydsl-apt:5.0.0"
+
+	// array type 추가
+	// https://mvnrepository.com/artifact/com.vladmihalcea/hibernate-types-52
+	implementation 'com.vladmihalcea:hibernate-types-52:2.12.1'
 }
 
 tasks.named('test') {

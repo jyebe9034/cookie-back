@@ -1,14 +1,21 @@
 package com.example.cookie.user.domain;
 
+import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
-@Table(name = "user")
+@TypeDef(
+        name = "string-array",
+        typeClass = StringArrayType.class
+)
+@Table(name = "user", schema = "public")
 @Data
 @Entity
 @NoArgsConstructor
@@ -33,9 +40,9 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
-    /* TODO: 타입 어떻게 처리할지? */
-    @Column(nullable = false, unique = true)
-    private String taste;
+    @Column(name = "taste", columnDefinition = "text[]")
+    @Type(type = "string-array")
+    private String[] taste;
 
     @Column(length = 4)
     private String mbti;
@@ -44,10 +51,10 @@ public class User {
     private String profileImage;
 
     @Column(nullable = false)
-    private boolean isAdmin;
+    private String role;
 
     @Column(nullable = false)
-    private Date joinDate;
+    private LocalDate joinDate;
 
     @Column(nullable = false)
     private boolean isLeave;

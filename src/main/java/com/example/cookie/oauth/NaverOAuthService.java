@@ -1,5 +1,6 @@
 package com.example.cookie.oauth;
 
+import com.example.cookie.oauth.domain.OAuthToken;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +18,18 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class OAuthService {
+public class NaverOAuthService {
 
-    @Value("${oauth.kakao.client-id}")
+    @Value("${oauth.naver.client-id}")
     private String CLIENT_ID;
 
-    @Value("${oauth.kakao.redirect-uri}")
+    @Value("${oauth.naver.redirect-uri}")
     private String REDIRECT_URI;
 
-    @Value("${oauth.kakao.client-secret}")
+    @Value("${oauth.naver.client-secret}")
     private String CLIENT_SECRET;
 
-    public MultiValueMap<String, String> getKakaoAuthCode(String code) {
+    public MultiValueMap<String, String> getNaverAuthCode(String code) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", "authorization_code");
         map.add("client_id", CLIENT_ID);
@@ -36,20 +37,21 @@ public class OAuthService {
         map.add("code", code);
         map.add("client_secret", CLIENT_SECRET);
 
+        log.info("map = {}", map);
         return map;
     }
 
-    public ResponseEntity<String> getKakaoToken(HttpEntity httpEntity) {
+    public ResponseEntity<String> getNaverToken(HttpEntity httpEntity) {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.exchange(
-          "https://kauth.kakao.com/oauth/token",
+          "https://nid.naver.com/oauth2.0/token",
                 HttpMethod.POST,
                 httpEntity,
                 String.class
         );
     }
 
-    public HttpEntity<MultiValueMap<String, String>> requestKakaoProfile(String token) throws JsonProcessingException {
+    public HttpEntity<MultiValueMap<String, String>> requestNaverProfile(String token) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         String accessToken = objectMapper.readValue(token, OAuthToken.class).getAccess_token();
 
@@ -60,10 +62,10 @@ public class OAuthService {
         return new HttpEntity<>(headers);
     }
 
-    public ResponseEntity<String> getKakaoProfile(HttpEntity entity) {
+    public ResponseEntity<String> getNaverProfile(HttpEntity entity) {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.exchange(
-          "https://kapi.kakao.com/v2/user/me",
+          "https://openapi.naver.com/v1/nid/me",
               HttpMethod.POST,
               entity,
               String.class

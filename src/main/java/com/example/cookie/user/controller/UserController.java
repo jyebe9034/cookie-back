@@ -1,8 +1,8 @@
 package com.example.cookie.user.controller;
 
 import com.example.cookie.common.BaseController;
-import com.example.cookie.oauth.OAuthService;
-import com.example.cookie.oauth.OAuthToken;
+import com.example.cookie.oauth.KakaoOAuthService;
+import com.example.cookie.oauth.NaverOAuthService;
 import com.example.cookie.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController extends BaseController {
 
     private final UserService service;
-    private final OAuthService oAuthService;
+    private final KakaoOAuthService kakaoOAuthService;
+    private final NaverOAuthService naverOAuthService;
 
     /**
      * 로그인
@@ -41,8 +42,22 @@ public class UserController extends BaseController {
      * 네이버 로그인
      */
     @GetMapping("/user/oauth/naver")
-    public String naverOAuth(@RequestParam String code) {
-        return "code: " + code;
+    public ResponseEntity<String> naverOAuth(@RequestParam String code) throws JsonProcessingException {
+        log.info("code = {}", code);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> requestNaverToken = new HttpEntity<>(naverOAuthService.getNaverAuthCode(code), headers);
+        String naverToken = naverOAuthService.getNaverToken(requestNaverToken).getBody();
+        log.info("naverToken = {}", naverToken);
+
+        HttpEntity<MultiValueMap<String, String>> requestNaverProfile = naverOAuthService.requestNaverProfile(naverToken);
+        ResponseEntity<String> naverProfile = naverOAuthService.getNaverProfile(requestNaverProfile);
+        log.info("naverProfile = {}", naverProfile);
+
+        // 로그인 or 회원가입
+        return createResponseEntity(true, service.manageLoginOrJoin(naverProfile, "Naver"));
     }
 
     /**
@@ -51,17 +66,21 @@ public class UserController extends BaseController {
      */
     @GetMapping("/user/oauth/kakao")
     public ResponseEntity<String> kakaoOAuth(@RequestParam String code) throws JsonProcessingException {
+        log.info("code = {}", code);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        HttpEntity<MultiValueMap<String, String>> requestKakaoToken = new HttpEntity<>(oAuthService.getKakaoAuthCode(code), headers);
-        String kakaoToken = oAuthService.getKakaoToken(requestKakaoToken).getBody();
+        HttpEntity<MultiValueMap<String, String>> requestKakaoToken = new HttpEntity<>(kakaoOAuthService.getKakaoAuthCode(code), headers);
+        String kakaoToken = kakaoOAuthService.getKakaoToken(requestKakaoToken).getBody();
+        log.info("kakaoToken = {}", kakaoToken);
 
-        HttpEntity<MultiValueMap<String, String>> requestKakaoProfile = oAuthService.requestKakaoProfile(kakaoToken);
-        ResponseEntity<String> kakaoProfile = oAuthService.getKakaoProfile(requestKakaoProfile);
+        HttpEntity<MultiValueMap<String, String>> requestKakaoProfile = kakaoOAuthService.requestKakaoProfile(kakaoToken);
+        ResponseEntity<String> kakaoProfile = kakaoOAuthService.getKakaoProfile(requestKakaoProfile);
+        log.info("kakaoProfile = {}", kakaoProfile);
 
         // 로그인 or 회원가입
-        return createResponseEntity(service.login(kakaoProfile), kakaoProfile);
+        return createResponseEntity(true, service.manageLoginOrJoin(kakaoProfile, "Kakao"));
     }
 
     /**
