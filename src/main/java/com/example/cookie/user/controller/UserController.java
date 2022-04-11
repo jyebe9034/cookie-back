@@ -1,8 +1,8 @@
 package com.example.cookie.user.controller;
 
 import com.example.cookie.common.BaseController;
-import com.example.cookie.oauth.KakaoOAuthService;
-import com.example.cookie.oauth.NaverOAuthService;
+import com.example.cookie.security.oauth.KakaoOAuthService;
+import com.example.cookie.security.oauth.NaverOAuthService;
 import com.example.cookie.user.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;

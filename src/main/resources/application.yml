@@ -13,6 +13,12 @@ spring:
     password: cookie123!
   main:
     allow-bean-definition-overriding: true
+  jpa:
+    show_sql: true
+
+jwt:
+  secret-key: cookiemonsterTumuto
+  token-valid-time: 86400
 
 oauth:
   kakao:

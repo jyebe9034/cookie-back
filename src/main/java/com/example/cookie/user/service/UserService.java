@@ -1,7 +1,9 @@
 package com.example.cookie.user.service;
 
-import com.example.cookie.oauth.domain.KakaoProfile;
-import com.example.cookie.oauth.domain.NaverProfile;
+import com.example.cookie.common.Role;
+import com.example.cookie.security.jwt.JwtTokenProvider;
+import com.example.cookie.security.oauth.domain.KakaoProfile;
+import com.example.cookie.security.oauth.domain.NaverProfile;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.repository.UserRepository;
@@ -9,7 +11,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +24,7 @@ import java.util.*;
 public class UserService {
 
     private final UserRepository repository;
-
+    private final JwtTokenProvider tokenProvider;
 
     public Map<String, Object> manageLoginOrJoin(ResponseEntity<String> profile, String platform) throws JsonProcessingException {
         Map<String, Object> result = new HashMap<>();
@@ -90,7 +91,7 @@ public class UserService {
 
         entity.setPlatform(platform);
         entity.setTaste(taste);
-        entity.setRole("USER");
+        entity.setRole(Role.USER.toString());
         entity.setJoinDate(LocalDate.now());
         entity.setLeave(false);
 
@@ -107,8 +108,8 @@ public class UserService {
         result.put("seq", user.getSeq());
         result.put("id", user.getId());
         result.put("nickname", user.getNickname());
-        //result.put("role", user.get);
-        //result.put("jwt-token", jwtTokenProvider.createToken(member.getUsername()));
+        result.put("role", user.getRole());
+        result.put("jwt-token", tokenProvider.createToken(user.getId()));
         return result;
     }
 }

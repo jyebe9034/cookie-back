@@ -1,4 +1,4 @@
-package com.example.cookie.oauth.domain;
+package com.example.cookie.security.oauth.domain;
 
 import lombok.Data;
 
