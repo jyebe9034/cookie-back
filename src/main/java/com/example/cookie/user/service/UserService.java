@@ -1,7 +1,7 @@
 package com.example.cookie.user.service;
 
 import com.example.cookie.common.Role;
-import com.example.cookie.security.jwt.JwtTokenProvider;
+import com.example.cookie.security.JwtTokenProvider;
 import com.example.cookie.security.oauth.domain.KakaoProfile;
 import com.example.cookie.security.oauth.domain.NaverProfile;
 import com.example.cookie.user.domain.User;
@@ -9,9 +9,12 @@ import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +23,15 @@ import java.util.*;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository repository;
     private final JwtTokenProvider tokenProvider;
+
+    public UserService(UserRepository repository, @Lazy JwtTokenProvider tokenProvider) {
+        this.repository = repository;
+        this.tokenProvider = tokenProvider;
+    }
 
     public Map<String, Object> manageLoginOrJoin(ResponseEntity<String> profile, String platform) throws JsonProcessingException {
         Map<String, Object> result = new HashMap<>();
@@ -111,5 +118,11 @@ public class UserService {
         result.put("role", user.getRole());
         result.put("jwt-token", tokenProvider.createToken(user.getId()));
         return result;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return repository.findById(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 }
