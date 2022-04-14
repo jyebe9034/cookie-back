@@ -42,8 +42,8 @@ public class UserController extends BaseController {
      * 네이버 로그인
      */
     @GetMapping("/user/oauth/naver")
-    public ResponseEntity<String> naverOAuth(@RequestParam String code) throws JsonProcessingException {
-        log.info("code = {}", code);
+    public ResponseEntity<String> naverOAuth(@RequestParam String code, @RequestParam String state) throws JsonProcessingException {
+        log.info("code = {}, state = {}", code, state);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");

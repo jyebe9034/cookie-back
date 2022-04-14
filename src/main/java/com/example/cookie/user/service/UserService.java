@@ -9,12 +9,9 @@ import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,16 +19,12 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
-public class UserService implements UserDetailsService {
+public class UserService{
 
     private final UserRepository repository;
     private final JwtTokenProvider tokenProvider;
-
-    public UserService(UserRepository repository, @Lazy JwtTokenProvider tokenProvider) {
-        this.repository = repository;
-        this.tokenProvider = tokenProvider;
-    }
 
     public Map<String, Object> manageLoginOrJoin(ResponseEntity<String> profile, String platform) throws JsonProcessingException {
         Map<String, Object> result = new HashMap<>();
@@ -42,7 +35,6 @@ public class UserService implements UserDetailsService {
         String id = userInfo.getId();
 
         Optional<User> user = repository.findById(id);
-        log.info("user = {}", user);
         result = user.isEmpty() ? join(userInfo, platform) : login(user.get());
         return result;
     }
@@ -53,6 +45,7 @@ public class UserService implements UserDetailsService {
 
         UserDto userInfo = new UserDto();
         userInfo.setId(kakaoProfile.getId());
+        userInfo.setName(kakaoProfile.getProperties().get("nickname").toString());
         userInfo.setNickname(kakaoProfile.getProperties().get("nickname").toString());
         //userInfo.setAge(kakaoProfile.getKakao_account().get("age_range").toString());
         userInfo.setProfileImage(kakaoProfile.getProperties().get("profile_image").toString());
@@ -65,6 +58,7 @@ public class UserService implements UserDetailsService {
 
         UserDto userInfo = new UserDto();
         userInfo.setId(naverProfile.getResponse().get("id").toString());
+        userInfo.setName(naverProfile.getResponse().get("nickname").toString());
         userInfo.setNickname(naverProfile.getResponse().get("nickname").toString());
         userInfo.setAge(naverProfile.getResponse().get("age").toString());
         userInfo.setProfileImage(naverProfile.getResponse().get("profile_image").toString());
@@ -80,6 +74,9 @@ public class UserService implements UserDetailsService {
         User entity = new User();
         if (!userInfo.getId().isEmpty()) {
             entity.setId(userInfo.getId());
+        }
+        if (userInfo.getName()!= null) {
+            entity.setName(userInfo.getName());
         }
         if (userInfo.getNickname()!= null) {
             entity.setNickname(userInfo.getNickname());
@@ -118,11 +115,5 @@ public class UserService implements UserDetailsService {
         result.put("role", user.getRole());
         result.put("jwt-token", tokenProvider.createToken(user.getId()));
         return result;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 }
