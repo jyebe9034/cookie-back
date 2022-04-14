@@ -1,13 +1,17 @@
 package com.example.cookie.user.controller;
 
 import com.example.cookie.common.BaseController;
+import com.example.cookie.security.oauth.KakaoOAuthService;
+import com.example.cookie.security.oauth.NaverOAuthService;
 import com.example.cookie.user.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController extends BaseController {
 
     private final UserService service;
+    private final KakaoOAuthService kakaoOAuthService;
+    private final NaverOAuthService naverOAuthService;
 
     /**
      * 로그인
@@ -33,11 +39,48 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 회원가입
+     * 네이버 로그인
      */
-    @PostMapping("/join")
-    public String join() {
-        return "";
+    @GetMapping("/user/oauth/naver")
+    public ResponseEntity<String> naverOAuth(@RequestParam String code) throws JsonProcessingException {
+        log.info("code = {}", code);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> requestNaverToken = new HttpEntity<>(naverOAuthService.getNaverAuthCode(code), headers);
+        String naverToken = naverOAuthService.getNaverToken(requestNaverToken).getBody();
+        log.info("naverToken = {}", naverToken);
+
+        HttpEntity<MultiValueMap<String, String>> requestNaverProfile = naverOAuthService.requestNaverProfile(naverToken);
+        ResponseEntity<String> naverProfile = naverOAuthService.getNaverProfile(requestNaverProfile);
+        log.info("naverProfile = {}", naverProfile);
+
+        // 로그인 or 회원가입
+        return createResponseEntity(true, service.manageLoginOrJoin(naverProfile, "Naver"));
+    }
+
+    /**
+     * 카카오 로그인
+     * @return
+     */
+    @GetMapping("/user/oauth/kakao")
+    public ResponseEntity<String> kakaoOAuth(@RequestParam String code) throws JsonProcessingException {
+        log.info("code = {}", code);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        HttpEntity<MultiValueMap<String, String>> requestKakaoToken = new HttpEntity<>(kakaoOAuthService.getKakaoAuthCode(code), headers);
+        String kakaoToken = kakaoOAuthService.getKakaoToken(requestKakaoToken).getBody();
+        log.info("kakaoToken = {}", kakaoToken);
+
+        HttpEntity<MultiValueMap<String, String>> requestKakaoProfile = kakaoOAuthService.requestKakaoProfile(kakaoToken);
+        ResponseEntity<String> kakaoProfile = kakaoOAuthService.getKakaoProfile(requestKakaoProfile);
+        log.info("kakaoProfile = {}", kakaoProfile);
+
+        // 로그인 or 회원가입
+        return createResponseEntity(true, service.manageLoginOrJoin(kakaoProfile, "Kakao"));
     }
 
     /**

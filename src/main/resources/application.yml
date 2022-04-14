@@ -1,6 +1,10 @@
 server:
   port: 8080
 
+logging:
+  level:
+    root: info
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -9,3 +13,20 @@ spring:
     password: cookie123!
   main:
     allow-bean-definition-overriding: true
+    allow-circular-references: true
+  jpa:
+    show_sql: true
+
+jwt:
+  secret-key: cookiemonsterTumuto
+  token-valid-time: 86400
+
+oauth:
+  kakao:
+    client-id: 4aed26463538748deb5880a9d92033e3
+    client-secret: 6tZFdhBks2utPB0NGuSRX1ygTcYiYkxZ
+    redirect-uri: http://localhost:8080/user/oauth/kakao
+  naver:
+    client-id: fcxxzgD0_mVnFQNWn0Ao
+    client-secret: BfdfJtngqV
+    redirect-uri: http://localhost:8080/user/oauth/naver
