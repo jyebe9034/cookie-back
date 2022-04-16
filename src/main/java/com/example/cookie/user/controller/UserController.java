@@ -31,11 +31,12 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 로그아웃
+     * 네이버 로그아웃
      */
-    @GetMapping("/logout")
-    public String logout() {
-        return "";
+    @GetMapping("/naver/logout")
+    public String naverLogout(@RequestParam String id) {
+        service.naverLogout(id);
+        return "success";
     }
 
     /**

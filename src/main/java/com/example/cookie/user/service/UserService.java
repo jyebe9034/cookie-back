@@ -46,8 +46,6 @@ public class UserService{
         UserDto userInfo = new UserDto();
         userInfo.setId(kakaoProfile.getId());
         userInfo.setName(kakaoProfile.getProperties().get("nickname").toString());
-        userInfo.setNickname(kakaoProfile.getProperties().get("nickname").toString());
-        //userInfo.setAge(kakaoProfile.getKakao_account().get("age_range").toString());
         userInfo.setProfileImage(kakaoProfile.getProperties().get("profile_image").toString());
         return userInfo;
     }
@@ -58,9 +56,7 @@ public class UserService{
 
         UserDto userInfo = new UserDto();
         userInfo.setId(naverProfile.getResponse().get("id").toString());
-        userInfo.setName(naverProfile.getResponse().get("nickname").toString());
-        userInfo.setNickname(naverProfile.getResponse().get("nickname").toString());
-        userInfo.setAge(naverProfile.getResponse().get("age").toString());
+        userInfo.setName(naverProfile.getResponse().get("name").toString());
         userInfo.setProfileImage(naverProfile.getResponse().get("profile_image").toString());
         return userInfo;
     }
@@ -68,8 +64,6 @@ public class UserService{
     @Transactional
     public Map<String, Object> join(UserDto userInfo, String platform) {
         Map<String, Object> result = new HashMap<>();
-
-        log.info("userDto = {}", userInfo);
 
         User entity = new User();
         if (!userInfo.getId().isEmpty()) {
@@ -81,16 +75,9 @@ public class UserService{
         if (userInfo.getNickname()!= null) {
             entity.setNickname(userInfo.getNickname());
         }
-        if (userInfo.getAge()!= null) {
-            entity.setBirthYear(userInfo.getAge());
-        } else {
-            entity.setBirthYear("1995");
-        }
         if (userInfo.getProfileImage() != null) {
             entity.setProfileImage(userInfo.getProfileImage());
         }
-        log.info("age = {}", entity.getBirthYear());
-
         String[] taste = {"test"};
 
         entity.setPlatform(platform);
@@ -109,11 +96,22 @@ public class UserService{
     public Map<String, Object> login(User user) {
         Map<String, Object> result = new HashMap<>();
 
+        String token = tokenProvider.createToken(user.getId());
+        user.setJwtToken(token);
+        repository.save(user);
+
         result.put("seq", user.getSeq());
         result.put("id", user.getId());
         result.put("nickname", user.getNickname());
         result.put("role", user.getRole());
-        result.put("jwt-token", tokenProvider.createToken(user.getId()));
+        result.put("jwt-token", token);
         return result;
+    }
+
+    @Transactional
+    public void naverLogout(String id) {
+        User user = repository.findById(id).get();
+        user.setJwtToken(null);
+        repository.save(user);
     }
 }

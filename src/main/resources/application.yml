@@ -23,10 +23,10 @@ jwt:
 
 oauth:
   kakao:
-    client-id: 4aed26463538748deb5880a9d92033e3
-    client-secret: 6tZFdhBks2utPB0NGuSRX1ygTcYiYkxZ
+    client-id: 2edf4e7a1f9716a180ae8543a5c85bd6
+    client-secret: 450105254230f617e0dce76ab870a95c
     redirect-uri: http://localhost:8080/user/oauth/kakao
   naver:
-    client-id: fcxxzgD0_mVnFQNWn0Ao
-    client-secret: BfdfJtngqV
+    client-id: c4kTXMJtLugtxsn5a9ee
+    client-secret: RoRGW7v7aZ
     redirect-uri: http://localhost:8080/user/oauth/naver

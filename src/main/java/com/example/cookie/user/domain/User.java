@@ -42,9 +42,6 @@ public class User implements UserDetails {
     private String platform;
 
     @Column(nullable = false)
-    private String birthYear;
-
-    @Column(nullable = false)
     private String name;
 
     @Column(nullable = true)
@@ -68,6 +65,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private boolean isLeave;
+
+    @Column(nullable = true)
+    private String jwtToken;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
