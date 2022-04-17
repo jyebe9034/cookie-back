@@ -52,7 +52,7 @@ tasks.named('test') {
 }
 
 //querydsl 추가 시작
-def querydslDir = "src/main/generated"
+def querydslDir = "$buildDir/main/generated"
 
 querydsl {
 	library = "com.querydsl:querydsl-apt"
@@ -62,13 +62,10 @@ querydsl {
 sourceSets {
 	main.java.srcDir querydslDir
 }
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
 compileQuerydsl{
 	options.annotationProcessorPath = configurations.querydsl
-}
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	querydsl.extendsFrom compileClasspath
 }
 //querydsl 추가 끝

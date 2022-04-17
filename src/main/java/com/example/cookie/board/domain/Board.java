@@ -29,6 +29,4 @@ public class Board extends BaseDomain {
     @Column(nullable = false)
     private int readCount;
 
-    @Column(nullable = false)
-    private boolean isAdult;
 }

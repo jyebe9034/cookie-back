@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -23,11 +24,9 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath id = createString("id");
 
-    public final BooleanPath isAdmin = createBoolean("isAdmin");
-
     public final BooleanPath isLeave = createBoolean("isLeave");
 
-    public final DateTimePath<java.util.Date> joinDate = createDateTime("joinDate", java.util.Date.class);
+    public final DatePath<java.time.LocalDate> joinDate = createDate("joinDate", java.time.LocalDate.class);
 
     public final StringPath mbti = createString("mbti");
 
@@ -37,9 +36,13 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath profileImage = createString("profileImage");
 
+    public final StringPath role = createString("role");
+
+    public final ListPath<String, StringPath> roles = this.<String, StringPath>createList("roles", String.class, StringPath.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> seq = createNumber("seq", Long.class);
 
-    public final StringPath taste = createString("taste");
+    public final ArrayPath<String[], String> taste = createArray("taste", String[].class);
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));

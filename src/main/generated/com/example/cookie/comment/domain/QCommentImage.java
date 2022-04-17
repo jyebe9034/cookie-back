@@ -19,7 +19,13 @@ public class QCommentImage extends EntityPathBase<CommentImage> {
 
     public static final QCommentImage commentImage = new QCommentImage("commentImage");
 
-    public final NumberPath<Long> seq = createNumber("seq", Long.class);
+    public final NumberPath<Long> commentImageSeq = createNumber("commentImageSeq", Long.class);
+
+    public final NumberPath<Long> commentSeq = createNumber("commentSeq", Long.class);
+
+    public final StringPath name = createString("name");
+
+    public final StringPath path = createString("path");
 
     public QCommentImage(String variable) {
         super(CommentImage.class, forVariable(variable));

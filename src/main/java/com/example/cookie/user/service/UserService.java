@@ -7,6 +7,8 @@ import com.example.cookie.security.oauth.domain.NaverProfile;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.repository.UserRepository;
+import com.example.cookie.util.message.Message;
+import com.example.cookie.util.message.MessageUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -124,5 +130,52 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findById(username)
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
+    /**
+     * 내 정보 조회
+     * @param userSeq
+     * @return
+     */
+    public User selectMyInfo(Long userSeq) {
+        return repository.findById(userSeq).orElseThrow(() -> new RuntimeException("존재하지 않는 회원입니다."));
+    }
+
+    /**
+     * 내 정보 수정
+     * @param userSeq
+     * @param user
+     * @return
+     */
+    @Transactional
+    public Map<String, Object> updateMyInfo(Long userSeq, User user) {
+        User originUser = selectMyInfo(userSeq);
+        if (user.getNickname() != null && StringUtils.hasText(user.getNickname())) {
+            originUser.setNickname(user.getNickname());
+        }
+        if (user.getTaste() != null && user.getTaste().length > 0) {
+            originUser.setTaste(user.getTaste());
+        }
+        User save = repository.save(originUser);
+        if (save.getNickname().equals(user.getNickname()) && save.getTaste() == user.getTaste()) {
+            return MessageUtil.setResultMsg(Message.성공);
+        }
+        return MessageUtil.setResultMsg(Message.수정오류);
+    }
+
+    /**
+     * 탈퇴
+     * @param userSeq
+     * @return
+     */
+    @Transactional
+    public Map<String, Object> deleteMyInfo(Long userSeq) {
+        User originUser = selectMyInfo(userSeq);
+        originUser.setLeave(true);
+        User save = repository.save(originUser);
+        if (save.isLeave() == false) {
+            return MessageUtil.setResultMsg(Message.탈퇴오류);
+        }
+        return MessageUtil.setResultMsg(Message.성공);
     }
 }

@@ -50,4 +50,12 @@ public class CommentController extends BaseController {
     public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable("commentSeq") Long commentSeq) {
         return createResponseEntity(true, service.deleteComment(commentSeq));
     }
+
+    /**
+     * 마이페이지 - 내가 작성한 댓글 목록 조회
+     */
+    @GetMapping("/comment/commentList/{userSeq}")
+    public ResponseEntity<List<Comment>> selectMyCommentList(@PathVariable("userSeq") Long userSeq) {
+        return createResponseEntity(true, service.selectMyCommentList(userSeq));
+    }
 }
