@@ -3,6 +3,8 @@ package com.example.cookie.comment.service;
 import com.example.cookie.comment.domain.Comment;
 import com.example.cookie.comment.domain.CommentFormData;
 import com.example.cookie.comment.repository.CommentRepository;
+import com.example.cookie.util.message.Message;
+import com.example.cookie.util.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -95,11 +97,20 @@ public class CommentService {
      */
     @Transactional
     public Map<String, Object> deleteComment(Long commentSeq) {
-        Map<String, Object> result = new HashMap<>();
-
-        // 삭제
         repository.deleteById(commentSeq);
+        Optional<Comment> byId = repository.findById(commentSeq);
+        if (byId.isPresent()) {
+            return MessageUtil.setResultMsg(Message.댓글삭제오류);
+        }
+        return MessageUtil.setResultMsg(Message.성공);
+    }
 
-        return result;
+    /**
+     * 마이페이지 - 내가 작성한 댓글 목록 조회
+     * @param userSeq
+     * @return
+     */
+    public List<Comment> selectMyCommentList(Long userSeq) {
+        return repository.findAllByWriter(userSeq);
     }
 }

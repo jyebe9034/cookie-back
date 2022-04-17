@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebtoonController extends BaseController {
 
-    private final String URI_PREFIX = "/api/webtoon";
+    private final String URI_PREFIX = API_PREFIX + "/webtoon";
 
     private final WebtoonService service;
 

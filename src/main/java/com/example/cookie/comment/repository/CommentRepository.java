@@ -8,4 +8,6 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByBoardSeq(Long boardSeq);
+
+    List<Comment> findAllByWriter(Long userSeq);
 }
