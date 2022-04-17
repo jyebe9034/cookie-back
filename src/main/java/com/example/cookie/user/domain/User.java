@@ -38,13 +38,13 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String platform;
 
-    @Column(nullable = false, unique = true)
-    private String birthYear;
-
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = true)
     private String nickname;
 
     @Column(name = "taste", columnDefinition = "text[]")
@@ -65,6 +65,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private boolean isLeave;
+
+    @Column(nullable = true)
+    private String jwtToken;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default

@@ -33,11 +33,10 @@ public class NaverOAuthService {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", "authorization_code");
         map.add("client_id", CLIENT_ID);
-        map.add("redirect_uri", REDIRECT_URI);
-        map.add("code", code);
         map.add("client_secret", CLIENT_SECRET);
+        map.add("code", code);
 
-        log.info("map = {}", map);
+        log.info("requestCode = {}", map);
         return map;
     }
 
@@ -57,7 +56,7 @@ public class NaverOAuthService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 
         return new HttpEntity<>(headers);
     }

@@ -31,19 +31,20 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 로그아웃
+     * 네이버 로그아웃
      */
-    @GetMapping("/logout")
-    public String logout() {
-        return "";
+    @GetMapping("/naver/logout")
+    public String naverLogout(@RequestParam String id) {
+        service.naverLogout(id);
+        return "success";
     }
 
     /**
      * 네이버 로그인
      */
     @GetMapping("/user/oauth/naver")
-    public ResponseEntity<String> naverOAuth(@RequestParam String code) throws JsonProcessingException {
-        log.info("code = {}", code);
+    public ResponseEntity<String> naverOAuth(@RequestParam String code, @RequestParam String state) throws JsonProcessingException {
+        log.info("code = {}, state = {}", code, state);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");

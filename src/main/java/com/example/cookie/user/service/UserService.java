@@ -9,12 +9,9 @@ import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,16 +19,12 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
-public class UserService implements UserDetailsService {
+public class UserService{
 
     private final UserRepository repository;
     private final JwtTokenProvider tokenProvider;
-
-    public UserService(UserRepository repository, @Lazy JwtTokenProvider tokenProvider) {
-        this.repository = repository;
-        this.tokenProvider = tokenProvider;
-    }
 
     public Map<String, Object> manageLoginOrJoin(ResponseEntity<String> profile, String platform) throws JsonProcessingException {
         Map<String, Object> result = new HashMap<>();
@@ -42,7 +35,6 @@ public class UserService implements UserDetailsService {
         String id = userInfo.getId();
 
         Optional<User> user = repository.findById(id);
-        log.info("user = {}", user);
         result = user.isEmpty() ? join(userInfo, platform) : login(user.get());
         return result;
     }
@@ -53,8 +45,7 @@ public class UserService implements UserDetailsService {
 
         UserDto userInfo = new UserDto();
         userInfo.setId(kakaoProfile.getId());
-        userInfo.setNickname(kakaoProfile.getProperties().get("nickname").toString());
-        //userInfo.setAge(kakaoProfile.getKakao_account().get("age_range").toString());
+        userInfo.setName(kakaoProfile.getProperties().get("nickname").toString());
         userInfo.setProfileImage(kakaoProfile.getProperties().get("profile_image").toString());
         return userInfo;
     }
@@ -65,8 +56,7 @@ public class UserService implements UserDetailsService {
 
         UserDto userInfo = new UserDto();
         userInfo.setId(naverProfile.getResponse().get("id").toString());
-        userInfo.setNickname(naverProfile.getResponse().get("nickname").toString());
-        userInfo.setAge(naverProfile.getResponse().get("age").toString());
+        userInfo.setName(naverProfile.getResponse().get("name").toString());
         userInfo.setProfileImage(naverProfile.getResponse().get("profile_image").toString());
         return userInfo;
     }
@@ -75,25 +65,19 @@ public class UserService implements UserDetailsService {
     public Map<String, Object> join(UserDto userInfo, String platform) {
         Map<String, Object> result = new HashMap<>();
 
-        log.info("userDto = {}", userInfo);
-
         User entity = new User();
         if (!userInfo.getId().isEmpty()) {
             entity.setId(userInfo.getId());
         }
+        if (userInfo.getName()!= null) {
+            entity.setName(userInfo.getName());
+        }
         if (userInfo.getNickname()!= null) {
             entity.setNickname(userInfo.getNickname());
-        }
-        if (userInfo.getAge()!= null) {
-            entity.setBirthYear(userInfo.getAge());
-        } else {
-            entity.setBirthYear("1995");
         }
         if (userInfo.getProfileImage() != null) {
             entity.setProfileImage(userInfo.getProfileImage());
         }
-        log.info("age = {}", entity.getBirthYear());
-
         String[] taste = {"test"};
 
         entity.setPlatform(platform);
@@ -112,17 +96,22 @@ public class UserService implements UserDetailsService {
     public Map<String, Object> login(User user) {
         Map<String, Object> result = new HashMap<>();
 
+        String token = tokenProvider.createToken(user.getId());
+        user.setJwtToken(token);
+        repository.save(user);
+
         result.put("seq", user.getSeq());
         result.put("id", user.getId());
         result.put("nickname", user.getNickname());
         result.put("role", user.getRole());
-        result.put("jwt-token", tokenProvider.createToken(user.getId()));
+        result.put("jwt-token", token);
         return result;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findById(username)
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    @Transactional
+    public void naverLogout(String id) {
+        User user = repository.findById(id).get();
+        user.setJwtToken(null);
+        repository.save(user);
     }
 }

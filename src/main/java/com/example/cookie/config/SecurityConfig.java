@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .formLogin().disable()
-                .logout().logoutUrl("/logout")
+                .logout().logoutUrl("/user/logout")
                 .logoutSuccessUrl("/main")
                 .and()
                 .authorizeRequests()
