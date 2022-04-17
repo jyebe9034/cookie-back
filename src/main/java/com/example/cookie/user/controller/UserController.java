@@ -21,6 +21,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController extends BaseController {
 
+    private final String URI_PREFIX = API_PREFIX + "/user";
+
     private final UserService service;
     private final KakaoOAuthService kakaoOAuthService;
     private final NaverOAuthService naverOAuthService;
@@ -89,7 +91,7 @@ public class UserController extends BaseController {
     /**
      * 마이페이지 내 정보 조회
      */
-    @GetMapping("/my/info/{userSeq}")
+    @GetMapping(URI_PREFIX + "/info/{userSeq}")
     public ResponseEntity<User> selectMyInfo(@PathVariable("userSeq") Long userSeq) {
         return createResponseEntity(true, service.selectMyInfo(userSeq));
     }
@@ -97,7 +99,7 @@ public class UserController extends BaseController {
     /**
      * 마이페이지 내 정보 수정
      */
-    @PostMapping("/my/info/{userSeq}")
+    @PostMapping(URI_PREFIX + "/info/{userSeq}")
     public ResponseEntity<Map<String, Object>> updateMyInfo(@PathVariable("userSeq") Long userSeq, @RequestBody User user) {
         return createResponseEntity(true, service.updateMyInfo(userSeq, user));
     }
@@ -105,7 +107,7 @@ public class UserController extends BaseController {
     /**
      * 마이페이지 탈퇴
      */
-    @DeleteMapping("/my/info/{userSeq}")
+    @DeleteMapping(URI_PREFIX + "/{userSeq}")
     public ResponseEntity<Map<String, Object>> deleteMyInfo(@PathVariable("userSeq") Long userSeq) {
         return createResponseEntity(true, service.deleteMyInfo(userSeq));
     }
@@ -113,7 +115,7 @@ public class UserController extends BaseController {
     /**
      * 추천 웹툰 목록
      */
-    @GetMapping("/my/recommendList/{userSeq}")
+    @GetMapping(URI_PREFIX + "/recommendList/{userSeq}")
     public String selectMyRecommendList() {
         return "";
     }

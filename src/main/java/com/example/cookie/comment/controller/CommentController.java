@@ -17,12 +17,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CommentController extends BaseController {
 
+    private final String URI_PREFIX = API_PREFIX + "/comment";
+
     private final CommentService service;
 
     /**
      * 댓글 조회
      */
-    @GetMapping("/comment/{boardSeq}")
+    @GetMapping( URI_PREFIX + "/{boardSeq}")
     public ResponseEntity<List<Comment>> selectComment(@PathVariable("boardSeq") Long boardSeq) {
         return createResponseEntity(true, service.selectComment(boardSeq));
     }
@@ -30,7 +32,7 @@ public class CommentController extends BaseController {
     /**
      * 댓글 등록
      */
-    @PostMapping("/comment")
+    @PostMapping(URI_PREFIX)
     public ResponseEntity<Map<String, Object>> insertComment(CommentFormData formData) {
         return createResponseEntity(true, service.insertComment(formData));
     }
@@ -38,7 +40,7 @@ public class CommentController extends BaseController {
     /**
      * 댓글 수정
      */
-    @PutMapping("/comment")
+    @PutMapping(URI_PREFIX)
     public ResponseEntity<Map<String, Object>> updateComment(CommentFormData formData) {
         return createResponseEntity(true, service.updateComment(formData));
     }
@@ -46,7 +48,7 @@ public class CommentController extends BaseController {
     /**
      * 댓글 삭제
      */
-    @DeleteMapping("/comment/{commentSeq}")
+    @DeleteMapping(URI_PREFIX + "/{commentSeq}")
     public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable("commentSeq") Long commentSeq) {
         return createResponseEntity(true, service.deleteComment(commentSeq));
     }
@@ -54,7 +56,7 @@ public class CommentController extends BaseController {
     /**
      * 마이페이지 - 내가 작성한 댓글 목록 조회
      */
-    @GetMapping("/comment/commentList/{userSeq}")
+    @GetMapping(URI_PREFIX + "/list/{userSeq}")
     public ResponseEntity<List<Comment>> selectMyCommentList(@PathVariable("userSeq") Long userSeq) {
         return createResponseEntity(true, service.selectMyCommentList(userSeq));
     }
