@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class CommentController extends BaseController {
      * 댓글 등록
      */
     @PostMapping(URI_PREFIX)
-    public ResponseEntity<Map<String, Object>> insertComment(CommentFormData formData) {
+    public ResponseEntity<Map<String, Object>> insertComment(CommentFormData formData) throws IOException {
         return createResponseEntity(true, service.insertComment(formData));
     }
 
@@ -41,7 +42,7 @@ public class CommentController extends BaseController {
      * 댓글 수정
      */
     @PutMapping(URI_PREFIX)
-    public ResponseEntity<Map<String, Object>> updateComment(CommentFormData formData) {
+    public ResponseEntity<Map<String, Object>> updateComment(CommentFormData formData) throws IOException {
         return createResponseEntity(true, service.updateComment(formData));
     }
 
@@ -53,11 +54,4 @@ public class CommentController extends BaseController {
         return createResponseEntity(true, service.deleteComment(commentSeq));
     }
 
-    /**
-     * 마이페이지 - 내가 작성한 댓글 목록 조회
-     */
-    @GetMapping(URI_PREFIX + "/list/{userSeq}")
-    public ResponseEntity<List<Comment>> selectMyCommentList(@PathVariable("userSeq") Long userSeq) {
-        return createResponseEntity(true, service.selectMyCommentList(userSeq));
-    }
 }

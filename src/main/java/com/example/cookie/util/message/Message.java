@@ -17,8 +17,8 @@ public enum Message {
     /** 탈퇴 오류코드 */
     탈퇴오류("LEAVEERROR", "탈퇴 중 문제가 발생했습니다.", ""),
 
-    /** 댓글 삭제 오류코드 */
-    댓글삭제오류("COMMENTDELETEERROR", "댓글 삭제 중 문제가 발생했습니다.", "");
+    /** 댓글 부재 오류 */
+    댓글부재오류("COMMENTNOTEXISTERROR", "댓글이 존재하지 않습니다.", "");
 
     private String code;
     private String message;
