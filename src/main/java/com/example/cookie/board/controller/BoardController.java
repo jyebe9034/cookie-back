@@ -1,14 +1,10 @@
 package com.example.cookie.board.controller;
 
-import com.example.cookie.board.domain.Board;
 import com.example.cookie.board.service.BoardService;
 import com.example.cookie.common.BaseController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -89,22 +85,6 @@ public class BoardController extends BaseController {
     @PutMapping(URI_PREFIX + "/like/{userSeq}")
     public String disabledBoardLike() {
         return "";
-    }
-
-    /**
-     * 마이페이지 - 좋아요 목록
-     */
-    @GetMapping(URI_PREFIX + "/likedList/{userSeq}")
-    public ResponseEntity<List<Board>> selectMyLikedList(@PathVariable("userSeq") Long userSeq) {
-        return createResponseEntity(true, service.selectMyLikedList(userSeq));
-    }
-
-    /**
-     * 마이페이지 - 작성 글 목록
-     */
-    @GetMapping(URI_PREFIX + "/myList/{userSeq}")
-    public ResponseEntity<List<Board>> selectMyBoardList(@PathVariable("userSeq") Long userSeq) {
-        return createResponseEntity(true, service.selectMyBoardList(userSeq));
     }
 
 }

@@ -1,5 +1,9 @@
 package com.example.cookie.user.controller;
 
+import com.example.cookie.board.domain.Board;
+import com.example.cookie.board.service.BoardService;
+import com.example.cookie.comment.domain.Comment;
+import com.example.cookie.comment.service.CommentService;
 import com.example.cookie.common.BaseController;
 import com.example.cookie.security.oauth.KakaoOAuthService;
 import com.example.cookie.security.oauth.NaverOAuthService;
@@ -14,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -24,6 +29,8 @@ public class UserController extends BaseController {
     private final String URI_PREFIX = API_PREFIX + "/user";
 
     private final UserService service;
+    private final BoardService boardService;
+    private final CommentService commentService;
     private final KakaoOAuthService kakaoOAuthService;
     private final NaverOAuthService naverOAuthService;
 
@@ -103,6 +110,31 @@ public class UserController extends BaseController {
     @PostMapping(URI_PREFIX + "/info/{userSeq}")
     public ResponseEntity<Map<String, Object>> updateMyInfo(@PathVariable("userSeq") Long userSeq, @RequestBody User user) {
         return createResponseEntity(true, service.updateMyInfo(userSeq, user));
+    }
+
+
+    /**
+     * 마이페이지 - 좋아요 목록
+     */
+    @GetMapping(URI_PREFIX + "/likedList/{userSeq}")
+    public ResponseEntity<List<Board>> selectMyLikedList(@PathVariable("userSeq") Long userSeq) {
+        return createResponseEntity(true, boardService.selectMyLikedList(userSeq));
+    }
+
+    /**
+     * 마이페이지 - 작성 글 목록
+     */
+    @GetMapping(URI_PREFIX + "/myList/{userSeq}")
+    public ResponseEntity<List<Board>> selectMyBoardList(@PathVariable("userSeq") Long userSeq) {
+        return createResponseEntity(true, boardService.selectMyBoardList(userSeq));
+    }
+
+    /**
+     * 마이페이지 - 내가 작성한 댓글 목록 조회
+     */
+    @GetMapping(URI_PREFIX + "/list/{userSeq}")
+    public ResponseEntity<List<Comment>> selectMyCommentList(@PathVariable("userSeq") Long userSeq) {
+        return createResponseEntity(true, commentService.selectMyCommentList(userSeq));
     }
 
     /**
