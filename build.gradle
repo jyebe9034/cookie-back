@@ -35,6 +35,16 @@ dependencies {
 	//querydsl 추가
 	implementation "com.querydsl:querydsl-jpa:5.0.0"
 	implementation "com.querydsl:querydsl-apt:5.0.0"
+
+	// array type 추가
+	// https://mvnrepository.com/artifact/com.vladmihalcea/hibernate-types-52
+	implementation 'com.vladmihalcea:hibernate-types-52:2.12.1'
+
+	// spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// jwt
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 }
 
 tasks.named('test') {
@@ -42,7 +52,7 @@ tasks.named('test') {
 }
 
 //querydsl 추가 시작
-def querydslDir = "src/main/generated"
+def querydslDir = "$buildDir/main/generated"
 
 querydsl {
 	library = "com.querydsl:querydsl-apt"
@@ -52,13 +62,10 @@ querydsl {
 sourceSets {
 	main.java.srcDir querydslDir
 }
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
 compileQuerydsl{
 	options.annotationProcessorPath = configurations.querydsl
-}
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	querydsl.extendsFrom compileClasspath
 }
 //querydsl 추가 끝

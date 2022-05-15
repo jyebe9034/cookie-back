@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class NoticeController extends BaseController {
 
+    private final String URI_PREFIX = API_PREFIX + "/notice";
+
     private final NoticeService service;
 
     /**
      * 공지사항 목록 조회
      */
-    @GetMapping("/notice")
+    @GetMapping(URI_PREFIX)
     public String selectNoticeList() {
         return "";
     }
@@ -25,7 +27,7 @@ public class NoticeController extends BaseController {
     /**
      * 공지사항 조회
      */
-    @GetMapping("/notice/{noticeSeq}")
+    @GetMapping(URI_PREFIX + "/{noticeSeq}")
     public String selectNotice() {
         return "";
     }
