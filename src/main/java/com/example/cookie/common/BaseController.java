@@ -6,7 +6,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class BaseController {
+public abstract class BaseController {
+
+    protected final String API_PREFIX = "/api";
 
     /**
      * @Method Name : createResponseEntity

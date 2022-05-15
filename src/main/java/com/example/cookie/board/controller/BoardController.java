@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BoardController extends BaseController {
 
+    private final String URI_PREFIX = API_PREFIX + "/board";
+
     private final BoardService service;
 
     /**
      * 게시글 목록 조회
      */
-    @GetMapping("/board")
+    @GetMapping(URI_PREFIX)
     public String selectBoardList() {
         return "";
     }
@@ -24,7 +26,7 @@ public class BoardController extends BaseController {
     /**
      * 게시글 조회
      */
-    @GetMapping("/board/{boardSeq}")
+    @GetMapping(URI_PREFIX + "/{boardSeq}")
     public String selectBoard() {
         return "";
     }
@@ -32,7 +34,7 @@ public class BoardController extends BaseController {
     /**
      * 게시글 등록
      */
-    @PostMapping("/board")
+    @PostMapping(URI_PREFIX)
     public String insertBoard() {
         return "";
     }
@@ -40,7 +42,7 @@ public class BoardController extends BaseController {
     /**
      * 게시글 수정
      */
-    @PutMapping("/board/{boardSeq}")
+    @PutMapping(URI_PREFIX + "/{boardSeq}")
     public String updateBoard() {
         return "";
     }
@@ -48,7 +50,7 @@ public class BoardController extends BaseController {
     /**
      * 게시글 삭제
      */
-    @DeleteMapping("/board/{boardSeq}")
+    @DeleteMapping(URI_PREFIX +"/{boardSeq}")
     public String deleteBoard() {
         return "";
     }
@@ -56,7 +58,7 @@ public class BoardController extends BaseController {
     /**
      * 게시글 검색
      */
-    @GetMapping("/board/{keyword}")
+    @GetMapping(URI_PREFIX + "/{keyword}")
     public String searchBoard() {
         return "";
     }
@@ -64,7 +66,7 @@ public class BoardController extends BaseController {
     /**
      * 게시글 좋아요 조회
      */
-    @GetMapping("/board/like/{boardSeq}")
+    @GetMapping(URI_PREFIX + "/like/{boardSeq}")
     public String selectBoardLiked() {
         return "";
     }
@@ -72,7 +74,7 @@ public class BoardController extends BaseController {
     /**
      * 게시글 좋아요 클릭
      */
-    @PostMapping("/board/like/{userSeq}")
+    @PostMapping(URI_PREFIX + "/like/{userSeq}")
     public String clickBoardLike() {
         return "";
     }
@@ -80,8 +82,9 @@ public class BoardController extends BaseController {
     /**
      * 게시글 좋아요 클릭 해제
      */
-    @PutMapping("/board/like/{userSeq}")
+    @PutMapping(URI_PREFIX + "/like/{userSeq}")
     public String disabledBoardLike() {
         return "";
     }
+
 }
