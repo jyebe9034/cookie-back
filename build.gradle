@@ -75,7 +75,13 @@ compileQuerydsl{
  * comileQuerydsl.doFirst 추가
  */
 compileQuerydsl.doFirst {
-	if(file(querydslDir).exists() )
+	if(file(querydslDir).exists())
 		delete(file(querydslDir))
+}
+tasks.withType(JavaCompile) {
+	options.generatedSourceOutputDirectory = file(querydslDir)
+}
+clean.doLast {
+	delete file(querydslDir)
 }
 //querydsl 추가 끝
