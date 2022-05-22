@@ -45,6 +45,9 @@ dependencies {
 
 	// jwt
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+	// junit
+	testImplementation 'junit:junit:4.13.2'
 }
 
 tasks.named('test') {
@@ -67,5 +70,8 @@ configurations {
 }
 compileQuerydsl{
 	options.annotationProcessorPath = configurations.querydsl
+}
+tasks.withType(JavaCompile) {
+	options.annotationProcessorGeneratedSourcesDirectory = file(querydslSrcDir)
 }
 //querydsl 추가 끝
