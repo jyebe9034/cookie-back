@@ -102,4 +102,13 @@ public class BoardController extends BaseController {
     public ResponseEntity<Map<String, Object>> disabledBoardLike(@RequestBody LikeRequestDto dto) {
         return createResponseEntity(true, service.deleteBoardLiked(dto));
     }
+
+    /**
+     * 메인화면에서 노출되는 인기달글, 신규달글
+     * @return
+     */
+    @GetMapping(URI_PREFIX + "/main/best")
+    public ResponseEntity<Map<String, Object>> selectMainBoardList() {
+        return createResponseEntity(true, service.selectMainBoardList());
+    }
 }

@@ -3,9 +3,7 @@ package com.example.cookie.board.repository;
 import com.example.cookie.board.domain.*;
 import com.example.cookie.comment.domain.QComment;
 import com.example.cookie.user.domain.QUser;
-import com.example.cookie.user.domain.User;
 import com.example.cookie.webtoon.domain.QWebtoon;
-import com.example.cookie.webtoon.domain.Webtoon;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -72,5 +70,20 @@ public class BoardRepositorySupportImpl implements BoardRepositorySupport {
                 .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(board.seq).groupBy(board.seq)
                 .leftJoin(comment).on(comment.boardSeq.eq(board.seq)).groupBy(board.seq)
                 .fetchOne());
+    }
+
+    /**
+     * 인기달글 5개 조회
+     * @return
+     */
+    @Override
+    public List<Board> selectBestBoardList() {
+        return factory.selectFrom(board).groupBy(board.seq)
+                .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(liked.boardSeq)
+                .leftJoin(comment).on(comment.boardSeq.eq(board.seq)).groupBy(comment.boardSeq)
+                .orderBy(
+                        liked.boardSeq.count().desc(),
+                        board.readCount.desc(),
+                        comment.boardSeq.count().desc()).fetch();
     }
 }

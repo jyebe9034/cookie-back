@@ -1,5 +1,6 @@
 package com.example.cookie.user.domain;
 
+import com.vladmihalcea.hibernate.type.array.IntArrayType;
 import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,10 @@ import java.util.stream.Collectors;
 @TypeDef(
         name = "string-array",
         typeClass = StringArrayType.class
+)
+@TypeDef(
+        name = "int-array",
+        typeClass = IntArrayType.class
 )
 @Table(name = "user", schema = "public")
 @Data
@@ -47,8 +52,8 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String nickname;
 
-    @Column(name = "taste", columnDefinition = "text[]")
     @Type(type = "string-array")
+    @Column(name = "taste", columnDefinition = "text[]")
     private String[] taste;
 
     @Column(length = 4)
@@ -68,6 +73,13 @@ public class User implements UserDetails {
 
     @Column(nullable = true)
     private String jwtToken;
+
+    @Type(type = "int-array")
+    @Column(
+            name = "recommend_webtoon_seq",
+            columnDefinition = "integer[]"
+    )
+    private int[] recommendWebtoonSeq;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
