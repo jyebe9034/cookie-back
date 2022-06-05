@@ -16,7 +16,7 @@ cache:
 script: "./gradlew clean build"
 
 before_deploy:
-  - zip -r cookie-back
+  - zip -r cookie-back *
   - mkdir -p deploy
   - mv cookie-back.zip deploy/cookie-back.zip
 
