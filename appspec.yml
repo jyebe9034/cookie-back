@@ -4,13 +4,15 @@ files:
   - source: /
     destination: /home/ubuntu/tumuto/zip/
     overwrite: yes
+
 permissions:
   - object: /
     pattern: "**"
     owner: ubuntu
     group: ubuntu
+
 hooks:
   ApplicationStart:
-    - location: script/deploy.sh
+    - location: deploy.sh
       timeout: 60
       runas: ubuntu
