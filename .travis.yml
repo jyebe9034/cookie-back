@@ -16,9 +16,9 @@ cache:
 script: "./gradlew clean build"
 
 before_deploy:
-  - zip -r tumuto
+  - zip -r cookie-back
   - mkdir -p deploy
-  - mv tumuto.zip deploy/tumuto.zip
+  - mv cookie-back.zip deploy/cookie-back.zip
 
 deploy:
   - provider: s3
