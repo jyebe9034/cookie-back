@@ -40,7 +40,7 @@ deploy:
     key: cookie-back.zip # 빌드 파일을 압축해서 전달
     bundle_type: zip # 압축 확장자
     application: tumuto # 웹 콘솔에서 등록한 CodeDeploy 애플리케이션
-    deployment_group: tumuto_group # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
+    deployment_group: tumuto_group # 웹 콘솔에서 등록한 CodeDeploy 애플리케이션 배포 그룹
     region: ap-northeast-2
     wait-until-deployed: true
     on:
