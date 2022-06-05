@@ -1,11 +1,13 @@
 server:
-  port: 8080
+  port: 8090
 
 logging:
   level:
     root: info
 
 spring:
+  profiles:
+    includes: default
   file-upload:
     base-dir: '/Users/hannah/cookieMonster/upload' # 지혜로컬 업로드경로
   datasource:
@@ -18,6 +20,11 @@ spring:
     allow-circular-references: true
   jpa:
     show_sql: true
+
+---
+
+spring:
+  profiles: default
 
 jwt:
   secret-key: cookiemonsterTumuto
