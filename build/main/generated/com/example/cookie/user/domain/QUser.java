@@ -38,6 +38,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath profileImage = createString("profileImage");
 
+    public final ArrayPath<int[], Integer> recommendWebtoonSeq = createArray("recommendWebtoonSeq", int[].class);
+
     public final StringPath role = createString("role");
 
     public final ListPath<String, StringPath> roles = this.<String, StringPath>createList("roles", String.class, StringPath.class, PathInits.DIRECT2);

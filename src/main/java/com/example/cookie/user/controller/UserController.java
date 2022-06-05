@@ -9,6 +9,8 @@ import com.example.cookie.security.oauth.KakaoOAuthService;
 import com.example.cookie.security.oauth.NaverOAuthService;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.user.service.UserService;
+import com.example.cookie.webtoon.domain.WebtoonDTO;
+import com.example.cookie.webtoon.service.WebtoonService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,7 @@ public class UserController extends BaseController {
     private final UserService service;
     private final BoardService boardService;
     private final CommentService commentService;
+    private final WebtoonService webtoonService;
     private final KakaoOAuthService kakaoOAuthService;
     private final NaverOAuthService naverOAuthService;
 
@@ -149,7 +152,8 @@ public class UserController extends BaseController {
      * 추천 웹툰 목록
      */
     @GetMapping(URI_PREFIX + "/recommendList/{userSeq}")
-    public String selectMyRecommendList() {
-        return "";
+    public ResponseEntity<List<WebtoonDTO>> selectMyRecommendList(@PathVariable("userSeq") Long userSeq) {
+        return createResponseEntity(true, webtoonService.selectMyRecommendList(userSeq));
     }
+
 }

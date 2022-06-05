@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -90,5 +91,18 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. seq = " + dto.getBoardSeq()));
         likedRepository.delete(liked);
         return MessageUtil.setResultMsg(Message.성공);
+    }
+
+    /**
+     * 메인화면에서 노출되는 인기달글, 신규달글
+     * @return
+     */
+    public Map<String, Object> selectMainBoardList() {
+        Map<String, Object> result = new HashMap<>();
+        List<Board> boards = repository.selectBestBoardList()
+                .stream().limit(5).collect(Collectors.toList());
+        result.put("bestBoardList", boards);
+        result.put("newBoardList", repository.findTop5ByOrderByCreateDateDesc());
+        return result;
     }
 }

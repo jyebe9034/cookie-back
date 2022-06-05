@@ -9,6 +9,8 @@ import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.repository.UserRepository;
 import com.example.cookie.util.message.Message;
 import com.example.cookie.util.message.MessageUtil;
+import com.example.cookie.webtoon.domain.Webtoon;
+import com.example.cookie.webtoon.repository.WebtoonRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ import java.util.*;
 public class UserService{
 
     private final UserRepository repository;
+    private final WebtoonRepository webtoonRepository;
     private final JwtTokenProvider tokenProvider;
 
     public Map<String, Object> manageLoginOrJoin(ResponseEntity<String> profile, String platform) throws JsonProcessingException {
@@ -91,6 +94,7 @@ public class UserService{
         entity.setRole(Role.USER.toString());
         entity.setJoinDate(LocalDate.now());
         entity.setLeave(false);
+        entity.setRecommendWebtoonSeq(makeRecommendWebtoonSeq(taste)); // 추천웹툰
 
         User save = repository.save(entity);
 
@@ -166,5 +170,71 @@ public class UserService{
             return MessageUtil.setResultMsg(Message.탈퇴오류);
         }
         return MessageUtil.setResultMsg(Message.성공);
+    }
+
+    /**
+     * 추천 웹툰 랜덤 선정
+     * @param taste
+     * @return
+     */
+    public int[] makeRecommendWebtoonSeq(String[] taste) {
+        int count = taste.length;
+        if (count == 1) { // 3개만 추천
+            int[] result = new int[3];
+            List<Webtoon> allByGenre = webtoonRepository.findAllByGenre(taste[0]);
+            for (int i = 0; i < 3; i++) {
+                result = calculateRecommendWebtoon(result, allByGenre, i);
+            }
+            return result;
+        } else if (count == 2) { // 4개 추천
+            int[] result = new int[4];
+            for (int i = 0; i < count; i++) {
+                List<Webtoon> allByGenre = webtoonRepository.findAllByGenre(taste[i]);
+                for (int j = 0; j < 2; j++) {
+                    result = calculateRecommendWebtoon(result, allByGenre, j);
+                }
+            }
+            return result;
+        } else { // 5개 추천
+            int[] result = new int[5];
+            for (int i = 0; i < count; i++) {
+                List<Webtoon> allByGenre = webtoonRepository.findAllByGenre(taste[i]);
+                if (i == 0) {
+                    for (int j = 0; j < 2; j++) {
+                        result = calculateRecommendWebtoon(result, allByGenre, j);
+                    }
+                } else if (i == 1) {
+                    for (int j = 2; j < 4; j++) {
+                        result = calculateRecommendWebtoon(result, allByGenre, j);
+                    }
+                } else {
+                    result = calculateRecommendWebtoon(result, allByGenre, 4);
+                }
+            }
+            return result;
+        }
+    }
+
+    /**
+     * 추천 웹툰 랜덤 선정 계산
+     * @param result
+     * @param list
+     * @param index
+     * @return
+     */
+    private int[] calculateRecommendWebtoon(int[] result, List<Webtoon> list, int index) {
+        int num = (int) (Math.random() * list.size() + 1);
+        Webtoon webtoon = list.get(num);
+        result[index] = webtoon.getWebtoonSeq().intValue();
+        return result;
+    }
+
+    /**
+     * 사용자 별 추천웹툰 시퀀스 조회
+     * @param userSeq
+     * @return
+     */
+    public int[] selectRecommendWebtoonSeq(Long userSeq) {
+        return repository.selectRecommendWebtoonSeq(userSeq);
     }
 }
