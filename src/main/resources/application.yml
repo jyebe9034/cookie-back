@@ -15,34 +15,27 @@ logging:
     root: info
 
 ---
-
-server:
-  port: 8090
-
 spring:
   profiles: real
     include: oauth, real-db
 
----
-
 server:
-  port: 8091
-
+  port: 8090
+---
 spring:
   profiles: real1
     include: oauth, real-db
 
----
-
 server:
-  port: 8092
-
+  port: 8091
+---
 spring:
   profiles: real2
     include: oauth, real-db
 
+server:
+  port: 8092
 ---
-
 spring:
   profiles: oauth
 
@@ -61,7 +54,6 @@ oauth:
     redirect-uri: "http://localhost:8080/user/oauth/naver"
 
 ---
-
 spring:
   profiles: real-db
 
