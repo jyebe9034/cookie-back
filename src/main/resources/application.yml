@@ -1,3 +1,7 @@
+spring:
+  profiles:
+    include: default
+
 server:
   port: 8090
 
@@ -5,26 +9,22 @@ logging:
   level:
     root: info
 
-spring:
-  profiles:
-    includes: default
-  file-upload:
-    base-dir: "/Users/hannah/cookieMonster/upload" # 지혜로컬 업로드경로
-  main:
-    allow-bean-definition-overriding: true
-    allow-circular-references: true
-  jpa:
-    show_sql: true
-    format_sql: true
-
 ---
+
 spring:
-  profile: default
+  profiles: default
+  file-upload:
+    base-dir: '/Users/hannah/cookieMonster/upload' # 지혜로컬 업로드경로
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://cookiemonster.cdgpcvesaium.ap-northeast-2.rds.amazonaws.com:5432/cookiemonster
     username: cookiemonster
     password: cookie123!
+  main:
+    allow-bean-definition-overriding: true
+    allow-circular-references: true
+  jpa:
+    show_sql: true
 
 jwt:
   secret-key: cookiemonsterTumuto
@@ -34,8 +34,8 @@ oauth:
   kakao:
     client-id: 2edf4e7a1f9716a180ae8543a5c85bd6
     client-secret: 450105254230f617e0dce76ab870a95c
-    redirect-uri: "http://localhost:8080/user/oauth/kakao"
+    redirect-uri: http://localhost:8080/user/oauth/kakao
   naver:
     client-id: c4kTXMJtLugtxsn5a9ee
     client-secret: RoRGW7v7aZ
-    redirect-uri: "http://localhost:8080/user/oauth/naver
+    redirect-uri: http://localhost:8080/user/oauth/naver
