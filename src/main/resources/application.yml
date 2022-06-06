@@ -47,7 +47,7 @@ spring:
 
 jwt:
   secret-key: cookiemonsterTumuto
-  token-valid-time: 8640정0
+  token-valid-time: 86400
 
 oauth:
   kakao:
