@@ -23,20 +23,6 @@ server:
   port: 8090
 ---
 spring:
-  profiles: real1
-    include: oauth, real-db
-
-server:
-  port: 8091
----
-spring:
-  profiles: real2
-    include: oauth, real-db
-
-server:
-  port: 8092
----
-spring:
   profiles: oauth
 
 jwt:

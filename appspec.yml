@@ -12,15 +12,7 @@ permissions:
     group: ubuntu
 
 hooks:
-  AppInstall:
-    - location: stop.sh # nginx와 연결되어 있지 않은 SpringBoot를 종료한다.
-      timeout: 60
-      runsas: ubuntu
   ApplicationStart:
     - location: deploy.sh # nginx와 연결되어 있지 않은 Port로 새 버전의 SpringBoot를 시작한다.
       timeout: 60
       runas: ubuntu
-  ValidateService:
-    - location: health.sh # 새 SpringBoot가 정상적으로 실행되었는지 확인한다.
-      timeout: 60
-      ranas: ubuntu
