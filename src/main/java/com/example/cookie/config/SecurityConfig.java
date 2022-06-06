@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/main")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/user/oauth/**").permitAll()
+                .antMatchers("/", "/css/**", "/images/", "/js/**", "/user/oauth/**", "/profile").permitAll()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
