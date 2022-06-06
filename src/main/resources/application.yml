@@ -1,6 +1,13 @@
+server:
+  port: 8090
+
+logging:
+  level:
+    root: info
+
 spring:
   profiles:
-    includes: real, oauth, real-db
+    includes: default
   file-upload:
     base-dir: "/Users/hannah/cookieMonster/upload" # 지혜로컬 업로드경로
   main:
@@ -10,20 +17,14 @@ spring:
     show_sql: true
     format_sql: true
 
-logging:
-  level:
-    root: info
-
 ---
 spring:
-  profiles: real
-    include: oauth, real-db
-
-server:
-  port: 8090
----
-spring:
-  profiles: oauth
+  profile: default
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://cookiemonster.cdgpcvesaium.ap-northeast-2.rds.amazonaws.com:5432/cookiemonster
+    username: cookiemonster
+    password: cookie123!
 
 jwt:
   secret-key: cookiemonsterTumuto
@@ -37,14 +38,4 @@ oauth:
   naver:
     client-id: c4kTXMJtLugtxsn5a9ee
     client-secret: RoRGW7v7aZ
-    redirect-uri: "http://localhost:8080/user/oauth/naver"
-
----
-spring:
-  profiles: real-db
-
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://cookiemonster.cdgpcvesaium.ap-northeast-2.rds.amazonaws.com:5432/cookiemonster
-    username: cookiemonster
-    password: cookie123!
+    redirect-uri: "http://localhost:8080/user/oauth/naver
