@@ -1,18 +1,6 @@
 spring:
   profiles:
-    includes: real, real-db, oauth
-
----
-
-server:
-  port: 8090
-
-logging:
-  level:
-    root: info
-
-spring:
-  profiles: real
+    includes: real, oauth, real-db
   file-upload:
     base-dir: '/Users/hannah/cookieMonster/upload' # 지혜로컬 업로드경로
   main:
@@ -21,6 +9,37 @@ spring:
   jpa:
     show_sql: true
 
+logging:
+  level:
+    root: info
+
+---
+
+server:
+  port: 8090
+
+spring:
+  profiles: real
+    include: oauth, real-db
+
+---
+
+server:
+  port: 8091
+
+spring:
+  profiles: real1
+    include: oauth, real-db
+
+---
+
+server:
+  port: 8092
+
+spring:
+  profiles: real2
+    include: oauth, real-db
+
 ---
 
 spring:
@@ -28,7 +47,7 @@ spring:
 
 jwt:
   secret-key: cookiemonsterTumuto
-  token-valid-time: 86400
+  token-valid-time: 8640정0
 
 oauth:
   kakao:
