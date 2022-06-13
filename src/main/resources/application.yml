@@ -1,11 +1,18 @@
+spring:
+  profiles:
+    include: default
+
 server:
-  port: 8080
+  port: 8090
 
 logging:
   level:
     root: info
 
+---
+
 spring:
+  profiles: default
   file-upload:
     base-dir: '/Users/hannah/cookieMonster/upload' # 지혜로컬 업로드경로
   datasource:

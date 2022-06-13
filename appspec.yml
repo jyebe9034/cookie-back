@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/tumuto/zip/
+    overwrite: yes
+
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+
+hooks:
+  ApplicationStart:
+    - location: deploy.sh # nginx와 연결되어 있지 않은 Port로 새 버전의 SpringBoot를 시작한다.
+      timeout: 60
+      runas: ubuntu
