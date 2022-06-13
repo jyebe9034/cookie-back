@@ -39,3 +39,14 @@ oauth:
     client-id: c4kTXMJtLugtxsn5a9ee
     client-secret: RoRGW7v7aZ
     redirect-uri: http://localhost:8080/user/oauth/naver
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIAVKRQNR6O3FSBLTG7
+      secretKey: 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
+    s3:
+      bucket: tumuto-springboot-build
+    region: ap-northeast-2
+    stack:
+      auto: false
