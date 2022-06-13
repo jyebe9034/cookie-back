@@ -48,6 +48,11 @@ dependencies {
 
 	// junit
 	testImplementation 'junit:junit:4.13.2'
+
+	// aws
+	compile 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
+	// https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.237'
 }
 
 tasks.named('test') {
