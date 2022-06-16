@@ -1,6 +1,6 @@
 # cookie-back
 
-### main 디렉토리 구조
+### 메인 디렉토리 구조
 ```
 root/src/main/java/com/example/cookie
 ├── CookieApplication.java
