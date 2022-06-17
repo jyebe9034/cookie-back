@@ -41,9 +41,9 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofNaver(String userNameAttributeName, Map<String, Object> attributes) {
-        Map<String, Object> properties = (Map<String, Object>) attributes.get("response");
+        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
         return OAuthAttributes.builder()
-                .id((String) attributes.get("id"))
+                .id((String) properties.get("id"))
                 .profileImage((String) properties.get("profile_image"))
                 .attributes(attributes)
                 .nameAttributeKey(userNameAttributeName)
