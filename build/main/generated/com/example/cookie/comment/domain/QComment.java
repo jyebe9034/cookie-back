@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -18,15 +17,11 @@ public class QComment extends EntityPathBase<Comment> {
 
     private static final long serialVersionUID = 457884957L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QComment comment = new QComment("comment");
 
     public final com.example.cookie.common.QBaseDomain _super = new com.example.cookie.common.QBaseDomain(this);
 
     public final NumberPath<Long> boardSeq = createNumber("boardSeq", Long.class);
-
-    public final QCommentImage commentImage;
 
     public final NumberPath<Long> commentSeq = createNumber("commentSeq", Long.class);
 
@@ -35,30 +30,25 @@ public class QComment extends EntityPathBase<Comment> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
+    public final StringPath fileName = createString("fileName");
+
     public final NumberPath<Long> parentSeq = createNumber("parentSeq", Long.class);
+
+    public final StringPath url = createString("url");
 
     //inherited
     public final NumberPath<Long> writer = _super.writer;
 
     public QComment(String variable) {
-        this(Comment.class, forVariable(variable), INITS);
+        super(Comment.class, forVariable(variable));
     }
 
     public QComment(Path<? extends Comment> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QComment(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QComment(PathMetadata metadata, PathInits inits) {
-        this(Comment.class, metadata, inits);
-    }
-
-    public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.commentImage = inits.isInitialized("commentImage") ? new QCommentImage(forProperty("commentImage"), inits.get("commentImage")) : null;
+        super(Comment.class, metadata);
     }
 
 }

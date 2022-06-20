@@ -8,5 +8,3 @@ METHOD NAME : findWebtoonByTitle
 PATH: /api/webtoon/search/{title} 
 PARAM: 없음 
 ```
-* 결과 구조
-* 결과 예시

@@ -8,6 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 @EqualsAndHashCode(callSuper=false)
 public class CommentFormData extends Comment {
 
-    MultipartFile file;
+    private MultipartFile file;
 
 }
