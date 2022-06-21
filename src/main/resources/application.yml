@@ -3,7 +3,7 @@ spring:
     include: default
 
 server:
-  port: 8090
+  port: 8080
 
 logging:
   level:
@@ -12,9 +12,6 @@ logging:
 ---
 
 spring:
-  profiles: default
-  file-upload:
-    base-dir: '/Users/hannah/cookieMonster/upload' # 지혜로컬 업로드경로
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://cookiemonster.cdgpcvesaium.ap-northeast-2.rds.amazonaws.com:5432/cookiemonster
