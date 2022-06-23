@@ -120,7 +120,7 @@ public class UserService{
     }
 
     @Transactional
-    public void naverLogout(String id) {
+    public void logout(String id) {
         User user = repository.findById(id).get();
         user.setJwtToken(null);
         repository.save(user);

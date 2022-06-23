@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -80,20 +81,15 @@ public class BoardService {
         return MessageUtil.setResultMsg(Message.성공);
     }
 
-    public int findBoardLiked(Long boardSeq) {
-        return likedRepository.findByBoardSeq(boardSeq);
-    }
-
     @Transactional
-    public Long saveBoardLike(LikeRequestDto dto) {
-        return likedRepository.save(dto.toEntity()).getBoardSeq();
-    }
+    public Map<String, Object> clickBoardLike(LikeRequestDto dto) {
+        Optional<Liked> liked = likedRepository.findByBoardSeqAndUserSeq(dto.getBoardSeq(), dto.getUserSeq());
+        if (liked.isPresent()) {
+            likedRepository.delete(liked.get());
+        } else {
+            likedRepository.save(dto.toEntity());
+        }
 
-    @Transactional
-    public Map<String, Object> deleteBoardLiked(LikeRequestDto dto) {
-        Liked liked = likedRepository.findByBoardSeqAndUserSeq(dto.getBoardSeq(), dto.getUserSeq())
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. seq = " + dto.getBoardSeq()));
-        likedRepository.delete(liked);
         return MessageUtil.setResultMsg(Message.성공);
     }
 

@@ -38,23 +38,6 @@ public class UserController extends BaseController {
     private final NaverOAuthService naverOAuthService;
 
     /**
-     * 로그인
-     */
-    @GetMapping("/login")
-    public String login() {
-        return "";
-    }
-
-    /**
-     * 네이버 로그아웃
-     */
-    @GetMapping("/naver/logout")
-    public String naverLogout(@RequestParam String id) {
-        service.naverLogout(id);
-        return "success";
-    }
-
-    /**
      * 네이버 로그인
      */
     @GetMapping("/user/oauth/naver")
@@ -97,6 +80,15 @@ public class UserController extends BaseController {
 
         // 로그인 or 회원가입
         return createResponseEntity(true, service.manageLoginOrJoin(kakaoProfile, "Kakao"));
+    }
+
+    /**
+     * 로그아웃
+     */
+    @GetMapping(URI_PREFIX + "/logout")
+    public String logout(@RequestParam String id) {
+        service.logout(id);
+        return "success";
     }
 
     /**

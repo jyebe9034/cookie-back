@@ -1,12 +1,67 @@
 ### 사용자 API
 
-##### 로그인
-
-##### 네이버 로그아웃
-
 ##### 네이버 로그인
+* 기본 정보 및 파라미터 설명
+```
+HTTP METHOD: GET
+PATH: http://tumuto.kr/oauth2/authorization/naver
+PARAM: 
+```
+* 결과 예시(성공)
+```
+{
+    "code" : "SUCCESS",
+    "message" : "SUCCESS"
+}
+```
 
-##### 카카오 로그인 
+##### 카카오 로그인
+* 기본 정보 및 파라미터 설명
+```
+HTTP METHOD: GET
+PATH: http://tumuto.kr/oauth2/authorization/kakao
+PARAM: 
+```
+* 결과 예시(성공)
+```
+{
+    "code" : "SUCCESS",
+    "message" : "SUCCESS"
+}
+```
+
+##### 회원가입 추가 정보
+* 기본 정보 및 파라미터 설명
+```
+HTTP METHOD: POST
+PATH: /api/user/join-info
+PARAM: 
+String nickname
+String[] taste
+```
+* 결과 예시(성공)
+```
+{
+    "code" : "SUCCESS",
+    "message" : "SUCCESS"
+}
+```
+
+##### 로그아웃
+
+* 기본 정보 및 파라미터 설명
+```
+HTTP METHOD: GET
+PATH: /api/user/logout
+PARAM: 
+```
+* 결과 예시(성공)
+```
+{
+    "code" : "SUCCESS",
+    "message" : "SUCCESS"
+}
+```
 
 ##### 마이페이지 내 정보 조회
 ```

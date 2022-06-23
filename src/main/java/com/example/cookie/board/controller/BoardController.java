@@ -24,9 +24,10 @@ public class BoardController extends BaseController {
 
     /**
      * 게시글 목록 조회
+     * @return
      */
     @GetMapping(URI_PREFIX)
-    public ResponseEntity<List<BoardListResponseDto>> selectBoardList() {
+    public ResponseEntity selectBoardList() {
         return createResponseEntity(true, service.findAllDesc());
     }
 
@@ -71,27 +72,11 @@ public class BoardController extends BaseController {
     }
 
     /**
-     * 게시글 좋아요 조회
-     */
-    @GetMapping(URI_PREFIX + "/like/{boardSeq}")
-    public ResponseEntity<Integer> selectBoardLiked(@PathVariable("boardSeq") Long boardSeq) {
-        return createResponseEntity(true, service.findBoardLiked(boardSeq));
-    }
-
-    /**
      * 게시글 좋아요 클릭
      */
     @PostMapping(URI_PREFIX + "/like")
     public ResponseEntity<Map<String, Object>> clickBoardLike(@RequestBody LikeRequestDto dto) {
-        return createResponseEntity(true, service.saveBoardLike(dto));
-    }
-
-    /**
-     * 게시글 좋아요 클릭 해제
-     */
-    @DeleteMapping(URI_PREFIX + "/like")
-    public ResponseEntity<Map<String, Object>> disabledBoardLike(@RequestBody LikeRequestDto dto) {
-        return createResponseEntity(true, service.deleteBoardLiked(dto));
+        return createResponseEntity(true, service.clickBoardLike(dto));
     }
 
     /**
