@@ -1,4 +1,4 @@
-package com.example.cookie.security;
+package com.example.cookie.security.jwt;
 
 import com.example.cookie.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

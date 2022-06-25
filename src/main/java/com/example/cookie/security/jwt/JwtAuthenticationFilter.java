@@ -1,4 +1,4 @@
-package com.example.cookie.security;
+package com.example.cookie.security.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
