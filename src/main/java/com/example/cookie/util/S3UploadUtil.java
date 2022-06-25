@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ public class S3UploadUtil {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket; // S3 버킷 이름
 
-    public String upload(String directory, MultipartFile multipartFile) {
+    public Map<String, Object> upload(String directory, MultipartFile multipartFile) {
         validateFileExists(multipartFile);
 
         String fileName = buildFileName(directory, multipartFile.getOriginalFilename());
@@ -43,7 +45,11 @@ public class S3UploadUtil {
 
         String url = amazonS3Client.getUrl(bucket, fileName).toString();
         log.info("url: {}", url);
-        return url;
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("fileName", fileName);
+        result.put("url", url);
+        return result;
     }
 
     private void validateFileExists(MultipartFile multipartFile) {

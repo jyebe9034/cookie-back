@@ -31,7 +31,4 @@ public class Comment extends BaseDomain {
 
     @Column(nullable = false)
     private String contents;
-
-    @OneToOne(mappedBy = "comment")
-    private CommentImage commentImage;
 }

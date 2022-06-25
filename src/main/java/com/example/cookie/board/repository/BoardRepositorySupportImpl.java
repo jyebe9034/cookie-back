@@ -47,7 +47,7 @@ public class BoardRepositorySupportImpl implements BoardRepositorySupport {
                 .from(board)
                 .innerJoin(user).on(user.seq.eq(board.writer)).groupBy(user.seq)
                 .innerJoin(webtoon).on(webtoon.webtoonSeq.eq(board.webtoonSeq)).groupBy(webtoon.webtoonSeq)
-                .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(board.seq).groupBy(board.seq)
+                .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(board.seq)
                 .leftJoin(comment).on(comment.boardSeq.eq(board.seq)).groupBy(board.seq)
                 .fetch();
     }
@@ -67,8 +67,9 @@ public class BoardRepositorySupportImpl implements BoardRepositorySupport {
                 .from(board)
                 .innerJoin(user).on(user.seq.eq(board.writer)).groupBy(user.seq)
                 .innerJoin(webtoon).on(webtoon.webtoonSeq.eq(board.webtoonSeq)).groupBy(webtoon.webtoonSeq)
-                .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(board.seq).groupBy(board.seq)
+                .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(board.seq)
                 .leftJoin(comment).on(comment.boardSeq.eq(board.seq)).groupBy(board.seq)
+                .where(board.seq.eq(boardSeq))
                 .fetchOne());
     }
 

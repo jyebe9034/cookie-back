@@ -7,8 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @SequenceGenerator(
         name = "BOARD_SEQ_GEN", //시퀀스 제너레이터 이름

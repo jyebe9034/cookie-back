@@ -1,6 +1,7 @@
 package com.example.cookie.user.service;
 
 import com.example.cookie.common.Role;
+import com.example.cookie.exception.DMException;
 import com.example.cookie.security.JwtTokenProvider;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.user.domain.UserDto;
@@ -60,7 +61,7 @@ public class UserService{
     }
 
     @Transactional
-    public void naverLogout(String id) {
+    public void logout(String id) {
         User user = repository.findById(id).get();
         user.setJwtToken(null);
         repository.save(user);
@@ -94,7 +95,7 @@ public class UserService{
         if (save.getNickname().equals(user.getNickname()) && save.getTaste() == user.getTaste()) {
             return MessageUtil.setResultMsg(Message.성공);
         }
-        return MessageUtil.setResultMsg(Message.수정오류);
+        throw new DMException("내 정보 수정 중 문제가 발생했습니다.");
     }
 
     /**
@@ -168,14 +169,5 @@ public class UserService{
         Webtoon webtoon = list.get(num);
         result[index] = webtoon.getWebtoonSeq().intValue();
         return result;
-    }
-
-    /**
-     * 사용자 별 추천웹툰 시퀀스 조회
-     * @param userSeq
-     * @return
-     */
-    public int[] selectRecommendWebtoonSeq(Long userSeq) {
-        return repository.selectRecommendWebtoonSeq(userSeq);
     }
 }
