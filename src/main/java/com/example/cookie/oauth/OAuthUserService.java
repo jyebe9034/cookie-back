@@ -1,10 +1,13 @@
 package com.example.cookie.oauth;
 
+import com.example.cookie.common.Role;
 import com.example.cookie.oauth.dto.OAuthAttributes;
+import com.example.cookie.oauth.dto.SessionUser;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -12,6 +15,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextListener;
 
 import javax.servlet.http.HttpSession;
 import java.util.Collections;
@@ -33,22 +37,31 @@ public class OAuthUserService extends DefaultOAuth2UserService {
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
         OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-        log.info("attributes: {}", attributes.getAttributes());
 
-        //checkSave(attributes);
+        User user = checkSave(attributes);
+        httpSession.setAttribute("user", new SessionUser(user));
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
+                Collections.singleton(new SimpleGrantedAuthority(String.valueOf(Role.USER))),
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey()
         );
     }
 
-    private void checkSave(OAuthAttributes attributes) {
+    private User checkSave(OAuthAttributes attributes) {
         Optional<User> result = userRepository.findById(attributes.getId());
-        if (result != null) {
+
+        if (result.isEmpty()) {
             User user = attributes.toUser();
             userRepository.save(user);
+            return user;
+        } else {
+            return result.get();
         }
+    }
+
+    @Bean
+    public RequestContextListener requestContextListener() {
+        return new RequestContextListener();
     }
 }

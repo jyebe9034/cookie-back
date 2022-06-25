@@ -3,8 +3,8 @@ package com.example.cookie.config;
 import com.example.cookie.oauth.OAuth2AuthenticationFailureHandler;
 import com.example.cookie.oauth.OAuth2AuthenticationSuccessHandler;
 import com.example.cookie.oauth.OAuthUserService;
-import com.example.cookie.security.JwtAuthenticationFilter;
-import com.example.cookie.security.JwtTokenProvider;
+import com.example.cookie.security.jwt.JwtAuthenticationFilter;
+import com.example.cookie.security.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -46,10 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .logout().permitAll()
-                    .logoutUrl("/user/logout")
-                    .logoutSuccessUrl("/main")
-                .and()
                     .oauth2Login()
                             .userInfoEndpoint()
                                 .userService(oAuthUserService)
@@ -57,7 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .successHandler(successHandler)
                                 .failureHandler(failureHandler);
 
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-
+        //http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
 }

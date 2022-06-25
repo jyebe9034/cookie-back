@@ -5,21 +5,21 @@ import com.example.cookie.board.service.BoardService;
 import com.example.cookie.comment.domain.Comment;
 import com.example.cookie.comment.service.CommentService;
 import com.example.cookie.common.BaseController;
-import com.example.cookie.security.oauth.KakaoOAuthService;
-import com.example.cookie.security.oauth.NaverOAuthService;
+import com.example.cookie.oauth.dto.SessionUser;
+import com.example.cookie.security.login.LoginUser;
 import com.example.cookie.user.domain.User;
+import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.service.UserService;
 import com.example.cookie.webtoon.domain.WebtoonDTO;
 import com.example.cookie.webtoon.service.WebtoonService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -34,61 +34,26 @@ public class UserController extends BaseController {
     private final BoardService boardService;
     private final CommentService commentService;
     private final WebtoonService webtoonService;
-    private final KakaoOAuthService kakaoOAuthService;
-    private final NaverOAuthService naverOAuthService;
 
-    /**
-     * 네이버 로그인
-     */
-    @GetMapping("/user/oauth/naver")
-    public ResponseEntity<String> naverOAuth(@RequestParam String code, @RequestParam String state) throws JsonProcessingException {
-        log.info("code = {}, state = {}", code, state);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        HttpEntity<MultiValueMap<String, String>> requestNaverToken = new HttpEntity<>(naverOAuthService.getNaverAuthCode(code), headers);
-        String naverToken = naverOAuthService.getNaverToken(requestNaverToken).getBody();
-        log.info("naverToken = {}", naverToken);
-
-        HttpEntity<MultiValueMap<String, String>> requestNaverProfile = naverOAuthService.requestNaverProfile(naverToken);
-        ResponseEntity<String> naverProfile = naverOAuthService.getNaverProfile(requestNaverProfile);
-        log.info("naverProfile = {}", naverProfile);
-
-        // 로그인 or 회원가입
-        return createResponseEntity(true, service.manageLoginOrJoin(naverProfile, "Naver"));
+    @PostMapping(URI_PREFIX + "/join")
+    public ResponseEntity<Map<String, Object>> join(@RequestBody UserDto user) {
+        return createResponseEntity(true, service.join(user));
     }
 
     /**
-     * 카카오 로그인
-     * @return
+     * 로그인
      */
-    @GetMapping("/user/oauth/kakao")
-    public ResponseEntity<String> kakaoOAuth(@RequestParam String code) throws JsonProcessingException {
-        log.info("code = {}", code);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
-        HttpEntity<MultiValueMap<String, String>> requestKakaoToken = new HttpEntity<>(kakaoOAuthService.getKakaoAuthCode(code), headers);
-        String kakaoToken = kakaoOAuthService.getKakaoToken(requestKakaoToken).getBody();
-        log.info("kakaoToken = {}", kakaoToken);
-
-        HttpEntity<MultiValueMap<String, String>> requestKakaoProfile = kakaoOAuthService.requestKakaoProfile(kakaoToken);
-        ResponseEntity<String> kakaoProfile = kakaoOAuthService.getKakaoProfile(requestKakaoProfile);
-        log.info("kakaoProfile = {}", kakaoProfile);
-
-        // 로그인 or 회원가입
-        return createResponseEntity(true, service.manageLoginOrJoin(kakaoProfile, "Kakao"));
+    @GetMapping(URI_PREFIX + "/login")
+    public ResponseEntity<Map<String, Object>> login(@LoginUser SessionUser user) {
+        return createResponseEntity(true, service.login(user));
     }
 
     /**
      * 로그아웃
      */
-    @GetMapping(URI_PREFIX + "/logout")
-    public String logout(@RequestParam String id) {
-        service.logout(id);
-        return "success";
+    @PostMapping(URI_PREFIX + "/logout")
+    public ResponseEntity<Map<String, Object>> logout(@RequestBody UserDto user) {
+        return createResponseEntity(true, service.logout(user.getSeq()));
     }
 
     /**

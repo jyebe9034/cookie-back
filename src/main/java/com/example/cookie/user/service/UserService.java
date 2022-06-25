@@ -1,8 +1,8 @@
 package com.example.cookie.user.service;
 
-import com.example.cookie.common.Role;
 import com.example.cookie.exception.DMException;
-import com.example.cookie.security.JwtTokenProvider;
+import com.example.cookie.oauth.dto.SessionUser;
+import com.example.cookie.security.jwt.JwtTokenProvider;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.repository.UserRepository;
@@ -12,14 +12,10 @@ import com.example.cookie.webtoon.domain.Webtoon;
 import com.example.cookie.webtoon.repository.WebtoonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
@@ -32,39 +28,63 @@ public class UserService{
     private final JwtTokenProvider tokenProvider;
 
     @Transactional
-    public Map<String, Object> join(UserDto dto, String platform) {
+    public Map<String, Object> join(UserDto dto) {
         Map<String, Object> result = new HashMap<>();
 
-        String[] taste = {"test"};
-        dto.setTaste(taste);
-        User entity = dto.toEntity();
-        repository.save(entity);
+        User user = repository.findById(dto.getSeq()).get();
+        user.setNickname(dto.getNickname());
+        user.setTaste(dto.getTaste());
+        repository.save(user);
 
-        result.put("isSuccess", "true");
-        result.put("seq", entity.getSeq());
-        return result;
+        if (user.getNickname() != null) {
+            Map<String, Object> dataMap = new HashMap<>();
+            dataMap.put("seq", user.getSeq());
+            dataMap.put("id", user.getId());
+            dataMap.put("nickname", user.getNickname());
+            dataMap.put("role", user.getRole());
+
+            result.put("message", "SUCCESS");
+            result.put("user", dataMap);
+            result.put("jwt-token", user.getJwtToken());
+            return result;
+        } else {
+            throw new DMException("추가 정보 등록 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
     }
 
-    public Map<String, Object> login(User user) {
+    @Transactional
+    public Map<String, Object> login(SessionUser sessionUser) {
         Map<String, Object> result = new HashMap<>();
 
-        String token = tokenProvider.createToken(user.getId());
+        String token = tokenProvider.createToken(sessionUser.getId());
+
+        User user = repository.findById(sessionUser.getSeq()).get();
         user.setJwtToken(token);
         repository.save(user);
 
-        result.put("seq", user.getSeq());
-        result.put("id", user.getId());
-        result.put("nickname", user.getNickname());
-        result.put("role", user.getRole());
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("seq", user.getSeq());
+        dataMap.put("id", user.getId());
+        dataMap.put("nickname", user.getNickname());
+        dataMap.put("role", user.getRole());
+
+        result.put("message", "SUCCESS");
+        result.put("user", dataMap);
         result.put("jwt-token", token);
         return result;
     }
 
     @Transactional
-    public void logout(String id) {
-        User user = repository.findById(id).get();
+    public Map<String, Object> logout(Long userSeq) {
+        User user = repository.findById(userSeq).get();
         user.setJwtToken(null);
         repository.save(user);
+
+        if (user.getJwtToken() == null) {
+            return MessageUtil.setResultMsg(Message.성공);
+        } else {
+            throw new DMException("로그아웃 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
     }
 
     /**

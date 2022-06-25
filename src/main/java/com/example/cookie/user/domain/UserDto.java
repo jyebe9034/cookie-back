@@ -6,18 +6,16 @@ import lombok.Setter;
 @Getter @Setter
 public class UserDto {
 
+    private Long seq;
     private String id;
-    private String name;
     private String nickname;
-    private String profileImage;
     private String[] taste;
 
     public User toEntity() {
         return User.builder()
+                .seq(seq)
                 .id(id)
-                .name(name)
                 .nickname(nickname)
-                .profileImage(profileImage)
                 .taste(taste)
                 .build();
     }
