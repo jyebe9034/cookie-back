@@ -31,10 +31,4 @@ public class Comment extends BaseDomain {
 
     @Column(nullable = false)
     private String contents;
-
-    @Column
-    private String url;
-
-    @Column
-    private String fileName;
 }
