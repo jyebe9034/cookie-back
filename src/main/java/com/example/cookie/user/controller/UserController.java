@@ -38,23 +38,6 @@ public class UserController extends BaseController {
     private final NaverOAuthService naverOAuthService;
 
     /**
-     * 로그인
-     */
-    @GetMapping("/login")
-    public String login() {
-        return "";
-    }
-
-    /**
-     * 네이버 로그아웃
-     */
-    @GetMapping("/naver/logout")
-    public String naverLogout(@RequestParam String id) {
-        service.naverLogout(id);
-        return "success";
-    }
-
-    /**
      * 네이버 로그인
      */
     @GetMapping("/user/oauth/naver")
@@ -100,6 +83,15 @@ public class UserController extends BaseController {
     }
 
     /**
+     * 로그아웃
+     */
+    @GetMapping(URI_PREFIX + "/logout")
+    public String logout(@RequestParam String id) {
+        service.logout(id);
+        return "success";
+    }
+
+    /**
      * 마이페이지 내 정보 조회
      */
     @GetMapping(URI_PREFIX + "/info/{userSeq}")
@@ -110,7 +102,7 @@ public class UserController extends BaseController {
     /**
      * 마이페이지 내 정보 수정
      */
-    @PostMapping(URI_PREFIX + "/info/{userSeq}")
+    @PutMapping(URI_PREFIX + "/info/{userSeq}")
     public ResponseEntity<Map<String, Object>> updateMyInfo(@PathVariable("userSeq") Long userSeq, @RequestBody User user) {
         return createResponseEntity(true, service.updateMyInfo(userSeq, user));
     }
@@ -127,15 +119,15 @@ public class UserController extends BaseController {
     /**
      * 마이페이지 - 작성 글 목록
      */
-    @GetMapping(URI_PREFIX + "/myList/{userSeq}")
+    @GetMapping(URI_PREFIX + "/boardList/{userSeq}")
     public ResponseEntity<List<Board>> selectMyBoardList(@PathVariable("userSeq") Long userSeq) {
         return createResponseEntity(true, boardService.selectMyBoardList(userSeq));
     }
 
     /**
-     * 마이페이지 - 내가 작성한 댓글 목록 조회
+     * 마이페이지 - 댓글 목록 조회
      */
-    @GetMapping(URI_PREFIX + "/list/{userSeq}")
+    @GetMapping(URI_PREFIX + "/commentList/{userSeq}")
     public ResponseEntity<List<Comment>> selectMyCommentList(@PathVariable("userSeq") Long userSeq) {
         return createResponseEntity(true, commentService.selectMyCommentList(userSeq));
     }
@@ -149,7 +141,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 추천 웹툰 목록
+     * 추천 웹툰 목록 조회
      */
     @GetMapping(URI_PREFIX + "/recommendList/{userSeq}")
     public ResponseEntity<List<WebtoonDTO>> selectMyRecommendList(@PathVariable("userSeq") Long userSeq) {

@@ -3,16 +3,19 @@ package com.example.cookie.board.service;
 import com.example.cookie.board.domain.*;
 import com.example.cookie.board.repository.BoardRepository;
 import com.example.cookie.board.repository.LikedRepository;
+import com.example.cookie.util.S3UploadUtil;
 import com.example.cookie.util.message.Message;
 import com.example.cookie.util.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -20,6 +23,8 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class BoardService {
+
+    private final S3UploadUtil s3UploadUtil;
 
     private final BoardRepository repository;
     private final LikedRepository likedRepository;
@@ -64,7 +69,7 @@ public class BoardService {
     public Long update(Long boardSeq, BoardUpdateRequestDto dto) {
         Board board = repository.findById(boardSeq)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. seq ="  + boardSeq));
-        board.update(board.getWebtoonSeq(), board.getTitle(), board.getContents());
+        board.update(dto.getWebtoonSeq(), dto.getTitle(), dto.getContents());
         return boardSeq;
     }
 
@@ -76,20 +81,15 @@ public class BoardService {
         return MessageUtil.setResultMsg(Message.성공);
     }
 
-    public int findBoardLiked(Long boardSeq) {
-        return likedRepository.findByBoardSeq(boardSeq);
-    }
-
     @Transactional
-    public Long saveBoardLike(LikeRequestDto dto) {
-        return likedRepository.save(dto.toEntity()).getBoardSeq();
-    }
+    public Map<String, Object> clickBoardLike(LikeRequestDto dto) {
+        Optional<Liked> liked = likedRepository.findByBoardSeqAndUserSeq(dto.getBoardSeq(), dto.getUserSeq());
+        if (liked.isPresent()) {
+            likedRepository.delete(liked.get());
+        } else {
+            likedRepository.save(dto.toEntity());
+        }
 
-    @Transactional
-    public Map<String, Object> deleteBoardLiked(LikeRequestDto dto) {
-        Liked liked = likedRepository.findByBoardSeqAndUserSeq(dto.getBoardSeq(), dto.getUserSeq())
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. seq = " + dto.getBoardSeq()));
-        likedRepository.delete(liked);
         return MessageUtil.setResultMsg(Message.성공);
     }
 
@@ -104,5 +104,15 @@ public class BoardService {
         result.put("bestBoardList", boards);
         result.put("newBoardList", repository.findTop5ByOrderByCreateDateDesc());
         return result;
+    }
+
+    /**
+     * 게시글 내용 이미지 업로드
+     * @param multipartFile
+     * @return
+     */
+    public Map<String, Object> uploadContentImage(MultipartFile multipartFile) {
+        // 파일 업로드
+        return s3UploadUtil.upload("boardImage", multipartFile);
     }
 }

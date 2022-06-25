@@ -1,5 +1,6 @@
 package com.example.cookie.webtoon.service;
 
+import com.example.cookie.common.NaverWebtoonSearch;
 import com.example.cookie.user.repository.UserRepository;
 import com.example.cookie.webtoon.domain.Webtoon;
 import com.example.cookie.webtoon.domain.WebtoonDTO;
@@ -17,7 +18,7 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class WebtoonService {
 
-    //private final NaverWebtoonSearch naverSearch;
+    private final NaverWebtoonSearch naverSearch;
 
     private final WebtoonRepository repository;
     private final UserRepository userRepository;
@@ -47,7 +48,7 @@ public class WebtoonService {
         }
 
         // 2. DB에 없는 경우 naver에 검색해서 웹툰정보 조회(최대 5개)
-        //result = naverSearch.activeBot(title);
+//        result = naverSearch.activeBot(title);
 
         return result;
     }
