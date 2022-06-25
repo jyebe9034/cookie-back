@@ -1,8 +1,8 @@
 package com.example.cookie.board.repository;
 
 import com.example.cookie.board.domain.Board;
-import com.example.cookie.board.domain.BoardListResponseDto;
-import com.example.cookie.board.domain.BoardResponseDto;
+import com.example.cookie.board.domain.dto.BoardListResponseDto;
+import com.example.cookie.board.domain.dto.BoardResponseDto;
 
 import java.util.List;
 import java.util.Optional;

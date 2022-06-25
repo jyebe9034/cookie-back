@@ -1,6 +1,6 @@
 package com.example.cookie.board.controller;
 
-import com.example.cookie.board.domain.*;
+import com.example.cookie.board.domain.dto.*;
 import com.example.cookie.board.service.BoardService;
 import com.example.cookie.common.BaseController;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -27,7 +26,7 @@ public class BoardController extends BaseController {
      * @return
      */
     @GetMapping(URI_PREFIX)
-    public ResponseEntity selectBoardList() {
+    public ResponseEntity<Map<String, Object>> selectBoardList() {
         return createResponseEntity(true, service.findAllDesc());
     }
 
@@ -35,16 +34,16 @@ public class BoardController extends BaseController {
      * 게시글 검색
      */
     @GetMapping(URI_PREFIX + "/search")
-    public ResponseEntity<List<Board>> searchBoard(@RequestBody BoardListResponseDto dto) {
-        return createResponseEntity(true, service.findSearchBoard(dto));
+    public ResponseEntity<Map<String, Object>> searchBoard(@RequestParam String title) {
+        return createResponseEntity(true, service.findByTitle(title));
     }
 
     /**
      * 게시글 조회
      */
     @GetMapping(URI_PREFIX + "/{boardSeq}")
-    public ResponseEntity<Board> selectBoard(@PathVariable Long boardSeq) {
-        return createResponseEntity(true, service.findByBoardSeq(boardSeq));
+    public ResponseEntity<Map<String, Object>> selectBoard(@PathVariable Long boardSeq) {
+        return createResponseEntity(true, service.findById(boardSeq));
     }
 
     /**
@@ -67,7 +66,7 @@ public class BoardController extends BaseController {
      * 게시글 삭제
      */
     @DeleteMapping(URI_PREFIX +"/{boardSeq}")
-    public ResponseEntity<Map<String, Object>> deleteBoard(@PathVariable Long boardSeq) {
+    public ResponseEntity<Map<String, Object>> delete(@PathVariable Long boardSeq) {
         return createResponseEntity(true, service.delete(boardSeq));
     }
 
@@ -76,7 +75,7 @@ public class BoardController extends BaseController {
      */
     @PostMapping(URI_PREFIX + "/like")
     public ResponseEntity<Map<String, Object>> clickBoardLike(@RequestBody LikeRequestDto dto) {
-        return createResponseEntity(true, service.clickBoardLike(dto));
+        return createResponseEntity(true, service.saveLike(dto));
     }
 
     /**

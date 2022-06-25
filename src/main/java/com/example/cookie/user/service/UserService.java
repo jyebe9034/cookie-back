@@ -27,6 +27,11 @@ public class UserService{
     private final WebtoonRepository webtoonRepository;
     private final JwtTokenProvider tokenProvider;
 
+    /**
+     * 회원가입 추가 정보
+     * @param dto
+     * @return
+     */
     @Transactional
     public Map<String, Object> join(UserDto dto) {
         Map<String, Object> result = new HashMap<>();
@@ -43,7 +48,7 @@ public class UserService{
             dataMap.put("nickname", user.getNickname());
             dataMap.put("role", user.getRole());
 
-            result.put("message", "SUCCESS");
+            result.put("resultMsg", "SUCCESS");
             result.put("user", dataMap);
             result.put("jwt-token", user.getJwtToken());
             return result;
@@ -52,6 +57,11 @@ public class UserService{
         }
     }
 
+    /**
+     * 로그인 (토큰 제공)
+     * @param sessionUser
+     * @return
+     */
     @Transactional
     public Map<String, Object> login(SessionUser sessionUser) {
         Map<String, Object> result = new HashMap<>();
@@ -68,12 +78,17 @@ public class UserService{
         dataMap.put("nickname", user.getNickname());
         dataMap.put("role", user.getRole());
 
-        result.put("message", "SUCCESS");
+        result.put("resultMsg", "SUCCESS");
         result.put("user", dataMap);
         result.put("jwt-token", token);
         return result;
     }
 
+    /**
+     * 로그아웃
+     * @param userSeq
+     * @return
+     */
     @Transactional
     public Map<String, Object> logout(Long userSeq) {
         User user = repository.findById(userSeq).get();

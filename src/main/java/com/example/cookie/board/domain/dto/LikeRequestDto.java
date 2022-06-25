@@ -1,19 +1,16 @@
-package com.example.cookie.board.domain;
+package com.example.cookie.board.domain.dto;
 
+import com.example.cookie.board.domain.Liked;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public class LikeRequestDto {
 
     private Long boardSeq;
     private Long userSeq;
-
-    @Builder
-    public LikeRequestDto(Long boardSeq, Long userSeq) {
-        this.boardSeq = boardSeq;
-        this.userSeq = userSeq;
-    }
 
     public Liked toEntity() {
         return Liked.builder()

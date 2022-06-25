@@ -1,6 +1,8 @@
 package com.example.cookie.board.repository;
 
 import com.example.cookie.board.domain.*;
+import com.example.cookie.board.domain.dto.BoardListResponseDto;
+import com.example.cookie.board.domain.dto.BoardResponseDto;
 import com.example.cookie.comment.domain.QComment;
 import com.example.cookie.user.domain.QUser;
 import com.example.cookie.webtoon.domain.QWebtoon;
@@ -54,7 +56,19 @@ public class BoardRepositorySupportImpl implements BoardRepositorySupport {
 
     @Override
     public List<BoardListResponseDto> findAllByTitle(String title) {
-        return null;
+        return factory.select(
+                        Projections.constructor(
+                                BoardListResponseDto.class,
+                                board, user, liked.count(), comment.count(), webtoon)
+                )
+                .from(board)
+                .innerJoin(user).on(user.seq.eq(board.writer)).groupBy(user.seq)
+                .innerJoin(webtoon).on(webtoon.webtoonSeq.eq(board.webtoonSeq)).groupBy(webtoon.webtoonSeq)
+                .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(board.seq)
+                .leftJoin(comment).on(comment.boardSeq.eq(board.seq)).groupBy(board.seq)
+                .where(board.title.contains(title))
+                .orderBy(board.createDate.desc(), board.seq.desc())
+                .fetch();
     }
 
     @Override
