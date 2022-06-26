@@ -211,7 +211,7 @@ PARAM: Long boardSeq 게시글 번호
 * 결과 예시(실패)
 ```
 {
-    "resultMsg" : "해당 게시글이 없습니다. seq = 25"
+    "resultMsg" : "해당 게시글이 없습니다."
 }
 ```
 
@@ -253,7 +253,7 @@ PARAM: Long boardSeq 게시글 번호
 * 결과 예시(실패)
 ```
 {
-    "resultMsg" : "해당 게시글이 없습니다. seq = 25"
+    "resultMsg" : "해당 게시글이 없습니다."
 }
 ```
 
@@ -274,7 +274,7 @@ PARAM: Long boardSeq 게시글 번호
 * 결과 예시(실패)
 ```
 {
-    "resultMsg" : "해당 게시글이 없습니다. seq = 25"
+    "resultMsg" : "해당 게시글이 없습니다."
 }
 ```
 

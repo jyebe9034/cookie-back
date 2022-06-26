@@ -112,7 +112,7 @@ public class BoardService {
             result.put("resultMsg", "SUCCESS");
             return result;
         } else {
-            throw new DMException("해당 게시글이 없습니다. seq = " + boardSeq);
+            throw new DMException("해당 게시글이 없습니다.");
         }
     }
     /** 조회수 증가 */
@@ -148,7 +148,7 @@ public class BoardService {
     @Transactional
     public Map<String, Object> update(Long boardSeq, BoardUpdateRequestDto dto) {
         Board board = repository.findById(boardSeq)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. seq ="  + boardSeq));
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
         board.update(dto.getWebtoonSeq(), dto.getTitle(), dto.getContents());
         repository.save(board);
         return MessageUtil.setResultMsg(Message.성공);
@@ -162,7 +162,7 @@ public class BoardService {
     @Transactional
     public Map<String, Object> delete(Long boardSeq) {
         Board board = repository.findById(boardSeq)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. seq = " + boardSeq));
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
         repository.delete(board);
         return MessageUtil.setResultMsg(Message.성공);
     }

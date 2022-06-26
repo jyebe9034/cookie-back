@@ -35,6 +35,9 @@ public class UserController extends BaseController {
     private final CommentService commentService;
     private final WebtoonService webtoonService;
 
+    /**
+     * 회원가입 추가 정보
+     */
     @PostMapping(URI_PREFIX + "/join")
     public ResponseEntity<Map<String, Object>> join(@RequestBody UserDto user) {
         return createResponseEntity(true, service.join(user));
