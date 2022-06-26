@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,10 +30,11 @@ import java.util.stream.Collectors;
 )
 @Table(name = "user", schema = "public")
 @Data
-@Entity
+@DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Entity
 public class User implements UserDetails {
 
     @Id
@@ -40,16 +42,13 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seq;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String id;
 
-    @Column(nullable = false)
     private String platform;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = true)
     private String nickname;
 
     @Type(type = "string-array")
@@ -59,19 +58,15 @@ public class User implements UserDetails {
     @Column(length = 4)
     private String mbti;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String profileImage;
 
-    @Column(nullable = false)
     private String role;
 
-    @Column(nullable = false)
     private LocalDate joinDate;
 
-    @Column(nullable = false)
     private boolean isLeave;
 
-    @Column(nullable = true)
     private String jwtToken;
 
     @Type(type = "int-array")

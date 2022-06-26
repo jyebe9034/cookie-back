@@ -1,4 +1,4 @@
-package com.example.cookie.board.domain;
+package com.example.cookie.board.domain.dto;
 
 import lombok.Builder;
 import lombok.Getter;

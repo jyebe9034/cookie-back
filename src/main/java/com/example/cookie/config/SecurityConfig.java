@@ -1,29 +1,30 @@
 package com.example.cookie.config;
 
-import com.example.cookie.security.JwtAuthenticationFilter;
-import com.example.cookie.security.JwtTokenProvider;
-import lombok.Builder;
+import com.example.cookie.oauth.OAuth2AuthenticationFailureHandler;
+import com.example.cookie.oauth.OAuth2AuthenticationSuccessHandler;
+import com.example.cookie.oauth.OAuthUserService;
+import com.example.cookie.security.jwt.JwtAuthenticationFilter;
+import com.example.cookie.security.jwt.JwtTokenProvider;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final OAuthUserService oAuthUserService;
+    private final OAuth2AuthenticationSuccessHandler successHandler;
+    private final OAuth2AuthenticationFailureHandler failureHandler;
     private final JwtTokenProvider jwtTokenProvider;
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
 
     @Bean
     @Override
@@ -34,18 +35,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .headers().frameOptions().disable()
                 .and()
-                .formLogin().disable()
-                .logout().logoutUrl("/user/logout")
-                .logoutSuccessUrl("/main")
+                    .httpBasic().disable()
+                    .csrf().disable()
+                    .formLogin().disable()
+                    .authorizeRequests()
+                    .antMatchers("/", "/css/**", "/images/**", "/js/**", "/profile", "/api/test/**", "/api/oauth/**").permitAll()
                 .and()
-                .authorizeRequests()
-                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/user/oauth/**", "/profile", "/api/test/**").permitAll()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                    .oauth2Login()
+                            .userInfoEndpoint()
+                                .userService(oAuthUserService)
+                                .and()
+                                .successHandler(successHandler)
+                                .failureHandler(failureHandler);
 
+        //http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
 }

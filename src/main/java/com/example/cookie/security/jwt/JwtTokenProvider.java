@@ -1,4 +1,4 @@
-package com.example.cookie.security;
+package com.example.cookie.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

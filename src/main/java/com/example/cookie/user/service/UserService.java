@@ -1,10 +1,8 @@
 package com.example.cookie.user.service;
 
-import com.example.cookie.common.Role;
 import com.example.cookie.exception.DMException;
-import com.example.cookie.security.JwtTokenProvider;
-import com.example.cookie.security.oauth.domain.KakaoProfile;
-import com.example.cookie.security.oauth.domain.NaverProfile;
+import com.example.cookie.oauth.dto.SessionUser;
+import com.example.cookie.security.jwt.JwtTokenProvider;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.repository.UserRepository;
@@ -12,19 +10,12 @@ import com.example.cookie.util.message.Message;
 import com.example.cookie.util.message.MessageUtil;
 import com.example.cookie.webtoon.domain.Webtoon;
 import com.example.cookie.webtoon.repository.WebtoonRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
@@ -36,94 +27,79 @@ public class UserService{
     private final WebtoonRepository webtoonRepository;
     private final JwtTokenProvider tokenProvider;
 
-    public Map<String, Object> manageLoginOrJoin(ResponseEntity<String> profile, String platform) throws JsonProcessingException {
-        Map<String, Object> result = new HashMap<>();
-
-        UserDto userInfo = new UserDto();
-        userInfo = platform.equals("Kakao") ? getKakaoUserInfo(profile) : getNaverUserInfo(profile);
-
-        String id = userInfo.getId();
-
-        Optional<User> user = repository.findById(id);
-        result = user.isEmpty() ? join(userInfo, platform) : login(user.get());
-        return result;
-    }
-
-    private UserDto getKakaoUserInfo(ResponseEntity<String> profile) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        KakaoProfile kakaoProfile = objectMapper.readValue(profile.getBody(), KakaoProfile.class);
-
-        UserDto userInfo = new UserDto();
-        userInfo.setId(kakaoProfile.getId());
-        userInfo.setName(kakaoProfile.getProperties().get("nickname").toString());
-        userInfo.setProfileImage(kakaoProfile.getProperties().get("profile_image").toString());
-        return userInfo;
-    }
-
-    private UserDto getNaverUserInfo(ResponseEntity<String> profile) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        NaverProfile naverProfile = objectMapper.readValue(profile.getBody(), NaverProfile.class);
-
-        UserDto userInfo = new UserDto();
-        userInfo.setId(naverProfile.getResponse().get("id").toString());
-        userInfo.setName(naverProfile.getResponse().get("name").toString());
-        userInfo.setProfileImage(naverProfile.getResponse().get("profile_image").toString());
-        return userInfo;
-    }
-
+    /**
+     * 회원가입 추가 정보
+     * @param dto
+     * @return
+     */
     @Transactional
-    public Map<String, Object> join(UserDto userInfo, String platform) {
+    public Map<String, Object> join(UserDto dto) {
         Map<String, Object> result = new HashMap<>();
 
-        User entity = new User();
-        if (!userInfo.getId().isEmpty()) {
-            entity.setId(userInfo.getId());
-        }
-        if (userInfo.getName()!= null) {
-            entity.setName(userInfo.getName());
-        }
-        if (userInfo.getNickname()!= null) {
-            entity.setNickname(userInfo.getNickname());
-        }
-        if (userInfo.getProfileImage() != null) {
-            entity.setProfileImage(userInfo.getProfileImage());
-        }
-        String[] taste = {"test"};
+        User user = repository.findById(dto.getSeq()).get();
+        user.setNickname(dto.getNickname());
+        user.setTaste(dto.getTaste());
+        repository.save(user);
 
-        entity.setPlatform(platform);
-        entity.setTaste(taste);
-        entity.setRole(Role.USER.toString());
-        entity.setJoinDate(LocalDate.now());
-        entity.setLeave(false);
-        entity.setRecommendWebtoonSeq(makeRecommendWebtoonSeq(taste)); // 추천웹툰
+        if (user.getNickname() != null) {
+            Map<String, Object> dataMap = new HashMap<>();
+            dataMap.put("seq", user.getSeq());
+            dataMap.put("id", user.getId());
+            dataMap.put("nickname", user.getNickname());
+            dataMap.put("role", user.getRole());
 
-        User save = repository.save(entity);
-
-        result.put("isSuccess", "true");
-        result.put("seq", save.getSeq());
-        return result;
+            result.put("resultMsg", "SUCCESS");
+            result.put("user", dataMap);
+            result.put("jwt-token", user.getJwtToken());
+            return result;
+        } else {
+            throw new DMException("추가 정보 등록 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
     }
 
-    public Map<String, Object> login(User user) {
+    /**
+     * 로그인 (토큰 제공)
+     * @param sessionUser
+     * @return
+     */
+    @Transactional
+    public Map<String, Object> login(SessionUser sessionUser) {
         Map<String, Object> result = new HashMap<>();
 
-        String token = tokenProvider.createToken(user.getId());
+        String token = tokenProvider.createToken(sessionUser.getId());
+
+        User user = repository.findById(sessionUser.getSeq()).get();
         user.setJwtToken(token);
         repository.save(user);
 
-        result.put("seq", user.getSeq());
-        result.put("id", user.getId());
-        result.put("nickname", user.getNickname());
-        result.put("role", user.getRole());
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put("seq", user.getSeq());
+        dataMap.put("id", user.getId());
+        dataMap.put("nickname", user.getNickname());
+        dataMap.put("role", user.getRole());
+
+        result.put("resultMsg", "SUCCESS");
+        result.put("user", dataMap);
         result.put("jwt-token", token);
         return result;
     }
 
+    /**
+     * 로그아웃
+     * @param userSeq
+     * @return
+     */
     @Transactional
-    public void logout(String id) {
-        User user = repository.findById(id).get();
+    public Map<String, Object> logout(Long userSeq) {
+        User user = repository.findById(userSeq).get();
         user.setJwtToken(null);
         repository.save(user);
+
+        if (user.getJwtToken() == null) {
+            return MessageUtil.setResultMsg(Message.성공);
+        } else {
+            throw new DMException("로그아웃 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
     }
 
     /**
