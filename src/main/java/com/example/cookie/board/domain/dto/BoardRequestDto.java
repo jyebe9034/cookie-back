@@ -1,5 +1,6 @@
-package com.example.cookie.board.domain;
+package com.example.cookie.board.domain.dto;
 
+import com.example.cookie.board.domain.Board;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
