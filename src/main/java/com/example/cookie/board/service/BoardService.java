@@ -7,11 +7,13 @@ import com.example.cookie.board.repository.LikedRepository;
 import com.example.cookie.comment.domain.Comment;
 import com.example.cookie.comment.repository.CommentRepository;
 import com.example.cookie.exception.DMException;
+import com.example.cookie.user.domain.User;
 import com.example.cookie.util.S3UploadUtil;
 import com.example.cookie.util.message.Message;
 import com.example.cookie.util.message.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -130,7 +132,9 @@ public class BoardService {
      * @return
      */
     @Transactional
-    public Map<String, Object> save(BoardSaveRequestDto dto) {
+    public Map<String, Object> save(BoardSaveRequestDto dto, Authentication authentication) {
+        Long userSeq = ((User) authentication.getPrincipal()).getSeq();
+        dto.setUserSeq(userSeq);
         Board board = repository.save(dto.toEntity());
         if (board.getSeq() > 0) {
             return MessageUtil.setResultMsg(Message.성공);
@@ -146,9 +150,16 @@ public class BoardService {
      * @return
      */
     @Transactional
-    public Map<String, Object> update(Long boardSeq, BoardUpdateRequestDto dto) {
+    public Map<String, Object> update(Long boardSeq, BoardUpdateRequestDto dto, Authentication authentication) {
+
         Board board = repository.findById(boardSeq)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+
+        Long userSeq = ((User) authentication.getPrincipal()).getSeq();
+        if (board.getWriter() != userSeq) {
+            throw new DMException("로그인한 사용자와 작성자가 일치하지 않습니다.");
+        }
+
         board.update(dto.getWebtoonSeq(), dto.getTitle(), dto.getContents());
         repository.save(board);
         return MessageUtil.setResultMsg(Message.성공);
@@ -173,7 +184,9 @@ public class BoardService {
      * @return
      */
     @Transactional
-    public Map<String, Object> saveLike(LikeRequestDto dto) {
+    public Map<String, Object> saveLike(LikeRequestDto dto, Authentication authentication) {
+        Long userSeq = ((User) authentication.getPrincipal()).getSeq();
+        dto.setUserSeq(userSeq);
         Optional<Liked> liked = likedRepository.findByBoardSeqAndUserSeq(dto.getBoardSeq(), dto.getUserSeq());
 
         if (liked.isPresent()) {

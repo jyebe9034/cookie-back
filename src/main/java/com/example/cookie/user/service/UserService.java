@@ -3,6 +3,7 @@ package com.example.cookie.user.service;
 import com.example.cookie.exception.DMException;
 import com.example.cookie.oauth.dto.SessionUser;
 import com.example.cookie.security.jwt.JwtTokenProvider;
+import com.example.cookie.user.domain.LoginUserDto;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.repository.UserRepository;
@@ -12,7 +13,6 @@ import com.example.cookie.webtoon.domain.Webtoon;
 import com.example.cookie.webtoon.repository.WebtoonRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -64,23 +64,34 @@ public class UserService{
      */
     @Transactional
     public Map<String, Object> login(SessionUser sessionUser) {
-        Map<String, Object> result = new HashMap<>();
-
-        String token = tokenProvider.createToken(sessionUser.getId());
-
+        log.info("UserService login");
+        /** 사용자 정보 조회 **/
         User user = repository.findById(sessionUser.getSeq()).get();
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("seq", user.getSeq());
+        claims.put("id", user.getId());
+        claims.put("nickname", user.getNickname());
+        String token = tokenProvider.setToken(claims);
+        log.info("setToken: {}", token);
+
+        /** 토큰 저장 **/
         user.setJwtToken(token);
         repository.save(user);
+        log.info("user token: {}", user.getJwtToken());
 
+        /** 사용자 정보 제공 **/
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("seq", user.getSeq());
         dataMap.put("id", user.getId());
         dataMap.put("nickname", user.getNickname());
-        dataMap.put("role", user.getRole());
+        dataMap.put("profileImage", user.getProfileImage());
 
+        /** 응답값 설정 **/
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", dataMap);
+        result.put("token", token);
         result.put("resultMsg", "SUCCESS");
-        result.put("user", dataMap);
-        result.put("jwt-token", token);
         return result;
     }
 
@@ -100,6 +111,15 @@ public class UserService{
         } else {
             throw new DMException("로그아웃 중 오류가 발생했습니다. 다시 시도해주세요.");
         }
+    }
+
+    /**
+     * 사용자 정보 조회
+     * @param id
+     * @return
+     */
+    public Optional<User> findByUserId(String id) {
+        return repository.findById(id);
     }
 
     /**

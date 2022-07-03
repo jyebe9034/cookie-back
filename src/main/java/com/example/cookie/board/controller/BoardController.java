@@ -6,6 +6,7 @@ import com.example.cookie.common.BaseController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -50,16 +51,16 @@ public class BoardController extends BaseController {
      * 게시글 등록
      */
     @PostMapping(URI_PREFIX)
-    public ResponseEntity<Map<String, Object>> save(@RequestBody BoardSaveRequestDto dto) {
-        return createResponseEntity(true, service.save(dto));
+    public ResponseEntity<Map<String, Object>> save(@RequestBody BoardSaveRequestDto dto, Authentication authentication) {
+        return createResponseEntity(true, service.save(dto, authentication));
     }
 
     /**
      * 게시글 수정
      */
     @PutMapping(URI_PREFIX + "/{boardSeq}")
-    public ResponseEntity<Map<String, Object>> update(@PathVariable Long boardSeq, @RequestBody BoardUpdateRequestDto dto) {
-        return createResponseEntity(true, service.update(boardSeq, dto));
+    public ResponseEntity<Map<String, Object>> update(@PathVariable Long boardSeq, @RequestBody BoardUpdateRequestDto dto, Authentication authentication) {
+        return createResponseEntity(true, service.update(boardSeq, dto, authentication));
     }
 
     /**
@@ -74,8 +75,8 @@ public class BoardController extends BaseController {
      * 게시글 좋아요 클릭
      */
     @PostMapping(URI_PREFIX + "/like")
-    public ResponseEntity<Map<String, Object>> clickBoardLike(@RequestBody LikeRequestDto dto) {
-        return createResponseEntity(true, service.saveLike(dto));
+    public ResponseEntity<Map<String, Object>> clickBoardLike(@RequestBody LikeRequestDto dto, Authentication authentication) {
+        return createResponseEntity(true, service.saveLike(dto, authentication));
     }
 
     /**

@@ -7,6 +7,7 @@ import com.example.cookie.comment.service.CommentService;
 import com.example.cookie.common.BaseController;
 import com.example.cookie.oauth.dto.SessionUser;
 import com.example.cookie.security.login.LoginUser;
+import com.example.cookie.user.domain.LoginUserDto;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.user.domain.UserDto;
 import com.example.cookie.user.service.UserService;
@@ -48,6 +49,7 @@ public class UserController extends BaseController {
      */
     @GetMapping(URI_PREFIX + "/login")
     public ResponseEntity<Map<String, Object>> login(@LoginUser SessionUser user) {
+        log.info("UserController login");
         return createResponseEntity(true, service.login(user));
     }
 
