@@ -220,7 +220,11 @@ PARAM: Long boardSeq 게시글 번호
 ```
 HTTP METHOD: POST
 PATH: /api/board/{boardSeq}
+TOKEN: O
 PARAM: 
+Long webtoonSeq 웹툰 번호
+String title    제목
+String contents 내용
 ```
 * 결과 예시(성공)
 ```
@@ -241,7 +245,12 @@ PARAM:
 ```
 HTTP METHOD: PUT
 PATH: /api/board/{boardSeq}
-PARAM: Long boardSeq 게시글 번호
+TOKEN: O
+PARAM: 
+Long boardSeq   게시글 번호
+Long webtoonSeq 웹툰 번호
+String title    제목
+String contents 내용
 ```
 * 결과 예시(성공)
 ```
@@ -283,9 +292,9 @@ PARAM: Long boardSeq 게시글 번호
 ```
 HTTP METHOD: POST
 PATH: /api/board/like
+TOKEN: O
 PARAM: 
 Long boardSeq 게시글 번호
-Long userSeq 고객 번호
 ```
 * 결과 예시(성공)
 ```
