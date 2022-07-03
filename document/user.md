@@ -101,7 +101,7 @@ String[] taste
 
 * 기본 정보 및 파라미터 설명
 ```
-HTTP METHOD: GET
+HTTP METHOD: POST
 PATH: /api/user/logout
 PARAM: Long seq 
 ```

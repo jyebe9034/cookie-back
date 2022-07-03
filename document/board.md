@@ -1,6 +1,6 @@
 ### 게시판 API
 
-##### 게시글 목록 조회
+##### 게시글 목록 조회 O
 * 기본 정보 및 파라미터 설명
 ```
 HTTP METHOD: GET
@@ -187,7 +187,7 @@ PARAM: String title
 ```
 HTTP METHOD: GET
 PATH: /api/board/{boardSeq}
-PARAM: Long boardSeq 게시글 번호
+PARAM: Long boardSeq 게시글 번호 (경로)
 ```
 * 결과 예시(성공)
 ```
@@ -219,12 +219,12 @@ PARAM: Long boardSeq 게시글 번호
 * 기본 정보 및 파라미터 설명
 ```
 HTTP METHOD: POST
-PATH: /api/board/{boardSeq}
-TOKEN: O
+PATH: /api/board
 PARAM: 
 Long webtoonSeq 웹툰 번호
 String title    제목
-String contents 내용
+String contents 내용 
+Long userSeq    사용자 번호
 ```
 * 결과 예시(성공)
 ```
@@ -245,9 +245,7 @@ String contents 내용
 ```
 HTTP METHOD: PUT
 PATH: /api/board/{boardSeq}
-TOKEN: O
-PARAM: 
-Long boardSeq   게시글 번호
+PARAM: Long boardSeq 게시글 번호 (경로)
 Long webtoonSeq 웹툰 번호
 String title    제목
 String contents 내용
@@ -271,7 +269,7 @@ String contents 내용
 ```
 HTTP METHOD: DELETE
 PATH: /api/board/{boardSeq}
-PARAM: Long boardSeq 게시글 번호
+PARAM: Long boardSeq 게시글 번호 (경로)
 ```
 * 결과 예시(성공)
 ```
@@ -292,9 +290,9 @@ PARAM: Long boardSeq 게시글 번호
 ```
 HTTP METHOD: POST
 PATH: /api/board/like
-TOKEN: O
 PARAM: 
 Long boardSeq 게시글 번호
+Long userSeq 고객 번호
 ```
 * 결과 예시(성공)
 ```
