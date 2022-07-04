@@ -6,6 +6,7 @@ import com.example.cookie.common.BaseController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -23,16 +24,16 @@ public class CommentController extends BaseController {
      * 댓글 등록
      */
     @PostMapping(URI_PREFIX)
-    public ResponseEntity<Map<String, Object>> insertComment(Comment comment) {
-        return createResponseEntity(true, service.insertComment(comment));
+    public ResponseEntity<Map<String, Object>> insertComment(Comment comment, Authentication authentication) {
+        return createResponseEntity(true, service.insertComment(comment, authentication));
     }
 
     /**
      * 댓글 수정
      */
     @PutMapping(URI_PREFIX)
-    public ResponseEntity<Map<String, Object>> updateComment(Comment comment) {
-        return createResponseEntity(true, service.updateComment(comment));
+    public ResponseEntity<Map<String, Object>> updateComment(Comment comment, Authentication authentication) {
+        return createResponseEntity(true, service.updateComment(comment, authentication));
     }
 
     /**

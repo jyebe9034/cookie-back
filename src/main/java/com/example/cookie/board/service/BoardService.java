@@ -1,10 +1,11 @@
 package com.example.cookie.board.service;
 
-import com.example.cookie.board.domain.*;
+import com.example.cookie.board.domain.Board;
+import com.example.cookie.board.domain.Liked;
 import com.example.cookie.board.domain.dto.*;
 import com.example.cookie.board.repository.BoardRepository;
 import com.example.cookie.board.repository.LikedRepository;
-import com.example.cookie.comment.domain.Comment;
+import com.example.cookie.comment.domain.CommentDto;
 import com.example.cookie.comment.repository.CommentRepository;
 import com.example.cookie.exception.DMException;
 import com.example.cookie.user.domain.User;
@@ -102,7 +103,7 @@ public class BoardService {
         Map<String, Object> result = new HashMap<>();
 
         Optional<BoardResponseDto> board = repository.findByBoardSeq(boardSeq);
-        List<Comment> commentList = commentRepository.findAllByBoardSeq(boardSeq);
+        List<CommentDto> commentList = commentRepository.findAllByBoardSeq(boardSeq);
 
         if (board.isPresent()) {
             /** 조회수 증가 */
