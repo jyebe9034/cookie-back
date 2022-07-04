@@ -1,72 +1,73 @@
 package com.example.cookie.security.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtTokenProvider {
+public class JwtTokenProvider implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
-    @Value("${jwt.token-valid-time}")
-    private long tokenValidTime;
 
-    private final UserDetailsService userDetailsService;
+    @Value("${jwt.token-valid-time}")
+    private long tokenValidTime; // 60 * 60 * 26 = 86400 (1일)
 
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String userKey) {
-        Claims claims = Jwts.claims().setSubject(userKey);
-        Date now = new Date();
+    /**
+     * JWT 토큰 생성
+     * @param claims
+     */
+    public String setToken(Map<String, Object> claims) {
+        Map<String, Object> header = new HashMap<>();
+        header.put("typ", "JWT");
+        header.put("alg", "HS512");
+
+        long now = System.currentTimeMillis();
+        claims.put("iat", new Date(now));
+        claims.put("exp", new Date(now + tokenValidTime * 1000));
 
         return Jwts.builder()
+                .setHeader(header)
                 .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidTime))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS512, secretKey.getBytes())
                 .compact();
     }
 
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserKey(token));
-        log.info("userDetails = {}", userDetails);
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    /**
+     * JWT Body 변환
+     * @param jwt
+     * @return
+     */
+    public Claims getClaims(String jwt) {
+        return Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(jwt).getBody();
     }
 
-    private String getUserKey(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("jwt-token");
-    }
-
-    public boolean validateToken(String jwtToken) {
-        try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
-        }
+    /**
+     * JWT 검증
+     * @param claims
+     */
+    public boolean validateJwt(Claims claims) {
+        return claims.getExpiration().before(new Date());
     }
 }
