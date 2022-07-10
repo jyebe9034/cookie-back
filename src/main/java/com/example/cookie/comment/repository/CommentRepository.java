@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
-
-    List<Comment> findAllByBoardSeq(Long boardSeq);
+public interface CommentRepository extends JpaRepository<Comment, Long>, CommentRepositorySupport {
 
     List<Comment> findAllByWriter(Long userSeq);
 }
