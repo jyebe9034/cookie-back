@@ -27,24 +27,16 @@ public class BoardController extends BaseController {
      * @return
      */
     @GetMapping(URI_PREFIX)
-    public ResponseEntity<Map<String, Object>> selectBoardList() {
-        return createResponseEntity(true, service.findAllDesc());
-    }
-
-    /**
-     * 게시글 검색
-     */
-    @GetMapping(URI_PREFIX + "/search")
-    public ResponseEntity<Map<String, Object>> searchBoard(@RequestParam String title) {
-        return createResponseEntity(true, service.findByTitle(title));
+    public ResponseEntity<Map<String, Object>> selectBoardList(@RequestParam(required = false) String title) {
+        return createResponseEntity(true, service.findAllDesc(title));
     }
 
     /**
      * 게시글 조회
      */
     @GetMapping(URI_PREFIX + "/{boardSeq}")
-    public ResponseEntity<Map<String, Object>> selectBoard(@PathVariable Long boardSeq) {
-        return createResponseEntity(true, service.findById(boardSeq));
+    public ResponseEntity<Map<String, Object>> selectBoard(@PathVariable Long boardSeq, Authentication authentication) {
+        return createResponseEntity(true, service.findById(boardSeq, authentication));
     }
 
     /**
