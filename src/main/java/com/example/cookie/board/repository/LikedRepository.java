@@ -9,7 +9,4 @@ import java.util.Optional;
 public interface LikedRepository extends JpaRepository<Liked, Long> {
 
     Optional<Liked> findByBoardSeqAndUserSeq(Long boardSeq, Long userSeq);
-
-    @Query("select count(boardSeq) from Liked where boardSeq = :boardSeq")
-    int findByBoardSeq(Long boardSeq);
 }

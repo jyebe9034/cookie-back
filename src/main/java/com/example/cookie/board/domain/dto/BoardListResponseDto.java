@@ -5,6 +5,8 @@ import com.example.cookie.user.domain.User;
 import com.example.cookie.webtoon.domain.Webtoon;
 import lombok.Getter;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter
 public class BoardListResponseDto {
 
@@ -16,6 +18,7 @@ public class BoardListResponseDto {
     private int readCount;
     private Long likeCount;
     private Long commentCount;
+    private String webtoonLink;
     private String genre;
 
     public BoardListResponseDto(Board board, User user, Long likeCount, Long commentCount, Webtoon webtoon) {
@@ -23,10 +26,11 @@ public class BoardListResponseDto {
         this.thumbnailPath = webtoon.getThumbnail();
         this.title = board.getTitle();
         this.nickname = user.getNickname();
-        this.createDate = String.valueOf(board.getCreateDate());
+        this.createDate = board.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.readCount = board.getReadCount();
         this.likeCount = likeCount;
         this.commentCount = commentCount;
+        this.webtoonLink = webtoon.getLink();
         this.genre = webtoon.getGenre();
     }
 }

@@ -4,8 +4,11 @@ import com.example.cookie.board.domain.Board;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.webtoon.domain.Webtoon;
 import lombok.Getter;
+import lombok.Setter;
 
-@Getter
+import java.time.format.DateTimeFormatter;
+
+@Getter @Setter
 public class BoardResponseDto {
 
     private Long boardSeq;
@@ -19,6 +22,7 @@ public class BoardResponseDto {
     private Long likeCount;
     private Long commentCount;
     private String genre;
+    private boolean hasLiked;
 
     public BoardResponseDto(Board board, User user, Long likeCount, Long commentCount, Webtoon webtoon) {
         this.boardSeq = board.getSeq();
@@ -27,7 +31,7 @@ public class BoardResponseDto {
         this.contents = board.getContents();
         this.writer = board.getWriter();
         this.nickname = user.getNickname();
-        this.createDate = String.valueOf(board.getCreateDate());
+        this.createDate = board.getCreateDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.readCount = board.getReadCount();
         this.likeCount = likeCount;
         this.commentCount = commentCount;

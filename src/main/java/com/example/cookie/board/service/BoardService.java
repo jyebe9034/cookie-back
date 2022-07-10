@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,41 +53,26 @@ public class BoardService {
 
     /**
      * 글 목록 조회
+     * @param title 글 제목
      * @return
      */
-    public Map<String, Object> findAllDesc() {
+    public Map<String, Object> findAllDesc(String title) {
         Map<String, Object> result = new HashMap<>();
 
-        List<BoardListResponseDto> boardList = repository.findAllDesc();
+        List<BoardListResponseDto> boardList = new ArrayList<>();
+        if (title.isEmpty()) {
+            boardList = repository.findAllDesc();
+        } else {
+            boardList = repository.findAllByTitle(title);
+        }
+
         if (boardList.size() > 0) {
             result.put("resultMsg", "SUCCESS");
             result.put("data", boardList);
-            return result;
-        } else {
-            throw new DMException("아직 글이 존재하지 않습니다.");
-        }
-    }
-
-    /**
-     * 글 검색 목록 조회
-     * @param title
-     * @return
-     */
-    public Map<String, Object> findByTitle(String title) {
-        if (title == "") {
-            throw new DMException("검색어를 입력해주세요.");
-        }
-
-        Map<String, Object> result = new HashMap<>();
-
-        List<BoardListResponseDto> boardList = repository.findAllByTitle(title);
-        if (boardList.size() > 0) {
-            result.put("resultMsg", "SUCCESS");
-            result.put("data", boardList);
-            return result;
-        } else {
+        } else if (!title.isEmpty() && boardList.size() == 0) {
             throw new DMException(title + "에 대한 검색 결과가 없습니다.");
         }
+        return result;
     }
 
     /**
@@ -98,13 +80,19 @@ public class BoardService {
      * @param boardSeq
      * @return
      */
-    public Map<String, Object> findById(Long boardSeq) {
+    public Map<String, Object> findById(Long boardSeq, Authentication authentication) {
         Map<String, Object> result = new HashMap<>();
 
         Optional<BoardResponseDto> board = repository.findByBoardSeq(boardSeq);
         List<Comment> commentList = commentRepository.findAllByBoardSeq(boardSeq);
 
         if (board.isPresent()) {
+            Long userSeq = ((User) authentication.getPrincipal()).getSeq();
+            Optional<Liked> liked = likedRepository.findByBoardSeqAndUserSeq(board.get().getBoardSeq(), userSeq);
+            if (liked.isPresent()) {
+                board.get().setHasLiked(true);
+            }
+
             /** 조회수 증가 */
             saveReadCount(board.get());
             Map<String, Object> dataMap = new HashMap<>();
@@ -136,11 +124,15 @@ public class BoardService {
         Long userSeq = ((User) authentication.getPrincipal()).getSeq();
         dto.setUserSeq(userSeq);
         Board board = repository.save(dto.toEntity());
+
+        Map<String, Object> result = new HashMap<>();
         if (board.getSeq() > 0) {
-            return MessageUtil.setResultMsg(Message.성공);
+            result.put("resultMsg", "SUCCESS");
+            result.put("boardSeq", board.getSeq());
         } else {
             throw new DMException("게시글 등록 중 오류가 발생했습니다. 다시 시도해주세요.");
         }
+        return result;
     }
 
     /**
