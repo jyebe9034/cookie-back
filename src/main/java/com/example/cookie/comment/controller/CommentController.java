@@ -24,7 +24,7 @@ public class CommentController extends BaseController {
      * 댓글 등록
      */
     @PostMapping(URI_PREFIX)
-    public ResponseEntity<Map<String, Object>> insertComment(Comment comment, Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> insertComment(@RequestBody Comment comment, Authentication authentication) {
         return createResponseEntity(true, service.insertComment(comment, authentication));
     }
 
@@ -32,7 +32,7 @@ public class CommentController extends BaseController {
      * 댓글 수정
      */
     @PutMapping(URI_PREFIX)
-    public ResponseEntity<Map<String, Object>> updateComment(Comment comment, Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> updateComment(@RequestBody Comment comment, Authentication authentication) {
         return createResponseEntity(true, service.updateComment(comment, authentication));
     }
 
