@@ -192,14 +192,13 @@ public class BoardService {
 
     /**
      * 메인화면에서 노출되는 인기달글, 신규달글
+     * 리턴은 BoardListResponseDto 객체로 받으면 됨.
      * @return
      */
     public Map<String, Object> selectMainBoardList() {
         Map<String, Object> result = new HashMap<>();
-        List<Board> boards = repository.selectBestBoardList()
-                .stream().limit(5).collect(Collectors.toList());
-        result.put("bestBoardList", boards);
-        result.put("newBoardList", repository.findTop5ByOrderByCreateDateDesc());
+        result.put("bestBoardList", repository.selectBestBoardList());
+        result.put("newBoardList", repository.selectNewBoardList());
         return result;
     }
 

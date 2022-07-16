@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -92,13 +93,41 @@ public class BoardRepositorySupportImpl implements BoardRepositorySupport {
      * @return
      */
     @Override
-    public List<Board> selectBestBoardList() {
-        return factory.selectFrom(board).groupBy(board.seq)
+    public List<BoardListResponseDto> selectBestBoardList() {
+        return factory.select(
+                Projections.constructor(
+                        BoardListResponseDto.class,
+                        board, user, liked.count(), comment.count(), webtoon)
+                )
+                .from(board)
+                .innerJoin(user).on(user.seq.eq(board.writer)).groupBy(user.seq)
+                .innerJoin(webtoon).on(webtoon.webtoonSeq.eq(board.webtoonSeq)).groupBy(webtoon.webtoonSeq)
                 .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(liked.boardSeq)
                 .leftJoin(comment).on(comment.boardSeq.eq(board.seq)).groupBy(comment.boardSeq)
                 .orderBy(
                         liked.boardSeq.count().desc(),
                         board.readCount.desc(),
-                        comment.boardSeq.count().desc()).fetch();
+                        comment.boardSeq.count().desc())
+                .fetch().stream().limit(5).collect(Collectors.toList());
+    }
+
+    /**
+     * 신규달글 5개 조회
+     * @return
+     */
+    @Override
+    public List<BoardListResponseDto> selectNewBoardList() {
+        return factory.select(
+                Projections.constructor(
+                        BoardListResponseDto.class,
+                        board, user, liked.count(), comment.count(), webtoon)
+                )
+                .from(board)
+                .innerJoin(user).on(user.seq.eq(board.writer)).groupBy(user.seq)
+                .innerJoin(webtoon).on(webtoon.webtoonSeq.eq(board.webtoonSeq)).groupBy(webtoon.webtoonSeq)
+                .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(liked.boardSeq)
+                .leftJoin(comment).on(comment.boardSeq.eq(board.seq)).groupBy(comment.boardSeq)
+                .orderBy(board.createDate.desc())
+                .fetch().stream().limit(5).collect(Collectors.toList());
     }
 }
