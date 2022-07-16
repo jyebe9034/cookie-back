@@ -51,4 +51,4 @@ jobs:
         aws s3 cp \
         --region ap-northeast-2 \
         --acl private \
-        ./tumuto.zip s3://tumuto-springboot-build/
+        ./cookie-back.zip s3://tumuto-springboot-build/
