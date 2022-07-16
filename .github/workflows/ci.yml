@@ -67,5 +67,5 @@ jobs:
         --application-name tumuto \
         --deployment-group-name tumuto-group \
         --file-exists-behavior OVERWRITE \
-        --s3-location bucket=tumuto-springboot-build,bundleType=zip,key=cookie-back.zip
+        --s3-location bucket=tumuto-springboot-build,bundleType=zip,key=cookie-back.zip \
         --region ap-northeast-2
