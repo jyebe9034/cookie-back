@@ -104,6 +104,7 @@ public class BoardRepositorySupportImpl implements BoardRepositorySupport {
                 .innerJoin(webtoon).on(webtoon.webtoonSeq.eq(board.webtoonSeq)).groupBy(webtoon.webtoonSeq)
                 .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(liked.boardSeq)
                 .leftJoin(comment).on(comment.boardSeq.eq(board.seq)).groupBy(comment.boardSeq)
+                .groupBy(board.seq)
                 .orderBy(
                         liked.boardSeq.count().desc(),
                         board.readCount.desc(),
@@ -127,6 +128,7 @@ public class BoardRepositorySupportImpl implements BoardRepositorySupport {
                 .innerJoin(webtoon).on(webtoon.webtoonSeq.eq(board.webtoonSeq)).groupBy(webtoon.webtoonSeq)
                 .leftJoin(liked).on(liked.boardSeq.eq(board.seq)).groupBy(liked.boardSeq)
                 .leftJoin(comment).on(comment.boardSeq.eq(board.seq)).groupBy(comment.boardSeq)
+                .groupBy(board.seq)
                 .orderBy(board.createDate.desc())
                 .fetch().stream().limit(5).collect(Collectors.toList());
     }
