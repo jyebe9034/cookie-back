@@ -1,6 +1,7 @@
 package com.example.cookie.security.jwt;
 
 import com.example.cookie.common.Role;
+import com.example.cookie.exception.DMException;
 import com.example.cookie.user.domain.User;
 import com.example.cookie.user.service.UserService;
 import io.jsonwebtoken.*;
@@ -34,7 +35,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (request.getHeader("Authorization") != null && request.getHeader("Authorization").startsWith("Bearer ")) {
             String jwt = request.getHeader("Authorization").substring(7);
-            log.info("jwt : {}", jwt);
 
             try {
                 Claims claims = jwtTokenProvider.getClaims(jwt);
@@ -67,7 +67,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // JwtException
             }
         } else {
-            // TODO JwtNotFoundException 에러 처리
+            request.setAttribute("message", "찾을 수 없는 토큰입니다. 다시 로그인해주세요.");
+            //throw new DMException("찾을 수 없는 토큰입니다. 다시 로그인해주세요.");
         }
         filterChain.doFilter(request, response);
     }
