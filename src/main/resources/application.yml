@@ -1,6 +1,11 @@
 spring:
   profiles:
     include: default
+  thymeleaf:
+    cache: false
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
 
 server:
   port: 8080

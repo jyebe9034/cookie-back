@@ -1,3 +1,9 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.6.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -29,7 +35,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+	// selenium
 	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.1.2'
 
 	//querydsl 추가
@@ -37,7 +43,6 @@ dependencies {
 	implementation "com.querydsl:querydsl-apt:5.0.0"
 
 	// array type 추가
-	// https://mvnrepository.com/artifact/com.vladmihalcea/hibernate-types-52
 	implementation 'com.vladmihalcea:hibernate-types-52:2.12.1'
 
 	// spring security
@@ -51,15 +56,17 @@ dependencies {
 
 	// aws
 	compile 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
-	// https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.237'
 
 	// oauth2
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.0'
 
 	// gson
 	implementation 'com.google.code.gson:gson:2.9.0'
+
+	//thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 }
 
 tasks.named('test') {
@@ -67,10 +74,8 @@ tasks.named('test') {
 }
 
 //querydsl 추가 시작
-def querydslDir = "$buildDir/main/generated"
-
+def querydslDir = "$buildDir/generated/querydsl"
 querydsl {
-	library = "com.querydsl:querydsl-apt"
 	jpa = true
 	querydslSourcesDir = querydslDir
 }
@@ -80,20 +85,7 @@ sourceSets {
 configurations {
 	querydsl.extendsFrom compileClasspath
 }
-compileQuerydsl{
+compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
-}
-/**
- * comileQuerydsl.doFirst 추가
- */
-compileQuerydsl.doFirst {
-	if(file(querydslDir).exists())
-		delete(file(querydslDir))
-}
-tasks.withType(JavaCompile) {
-	options.generatedSourceOutputDirectory = file(querydslDir)
-}
-clean.doLast {
-	delete file(querydslDir)
 }
 //querydsl 추가 끝

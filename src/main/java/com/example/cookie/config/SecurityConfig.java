@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    String[] permitPath = { "/", "/css/**", "/images/**", "/js/**", "/profile",
+    String[] permitPath = { "/", "/css/**", "/images/**", "/js/**", "/profile", "/api/main",
                             "/api/oauth/**", "/api/user/login", "/api/user/join" };
 
     @Override
