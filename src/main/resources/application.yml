@@ -1,6 +1,8 @@
 spring:
   profiles:
     include: default
+  mvc:
+    static-path-pattern: /static/**
   thymeleaf:
     cache: false
     check-template-location: true

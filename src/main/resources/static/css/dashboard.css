@@ -1,0 +1,13 @@
+#body {
+    display: flex;
+    padding-top: 2rem;
+}
+
+#content {
+    display: flex;
+    min-height: calc(100vh - 84px - 170px - 2.5rem); /* 추후 170 -> 80px 변경 예정 */
+    flex: 1 1;
+    padding-bottom: 3rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
+}

@@ -1,0 +1,28 @@
+#head-bar {
+    padding: 2.5rem 4rem;
+    margin: 0 auto;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#head-bar > .left {
+    display: flex;
+    align-items: center;
+}
+#head-bar > .left > #header-logo {
+    font-family: 'GangwonEduPowerExtraBoldA';
+    color: #039870;
+    font-size: 30px;
+    margin-right: 30px;
+}
+#head-bar > .left > div {
+    margin-right: 20px;
+}
+#head-bar > .right > .login > img {
+    width: 40px;
+    height: 40px;
+}
+#login-button {
+
+}

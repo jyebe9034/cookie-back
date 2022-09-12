@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content, link)">
+<head th:replace="layout/header :: header(~{::link})">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
+    <th:block th:replace="${link}" />
+</head>
+
+<body>
+    <section th:replace="layout/navigator :: navigator"></section>
+    <section id="body">
+        <section th:replace="${content}"></section>
+    </section>
+</body>
+
+<footer th:replace="layout/footer :: footer"></footer>
+</html>

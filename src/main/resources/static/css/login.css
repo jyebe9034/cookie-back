@@ -1,0 +1,19 @@
+#logo-box {
+    display: flex;
+    flex-direction: column;
+}
+
+#logo-box > #login-logo, #logo-box > .social-login {
+    margin: 1rem;
+}
+
+#logo-box > #login-logo {
+    font-family: 'GangwonEduPowerExtraBoldA';
+    color: #039870;
+    font-size: 50px;
+}
+
+#logo-box > .social-login {
+    width: 200px;
+    height: 50px;
+}

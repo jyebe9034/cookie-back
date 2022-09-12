@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header(links)">
+    <title>tumuto</title>
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/basic.css}">
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/navigator.css}">
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/footer.css}">
+    <!-- 추가 -->
+    <th:block th:replace="${links}" />
+</head>
+</html>
