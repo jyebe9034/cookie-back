@@ -1,3 +1,9 @@
+#content > div {
+    display: flex;
+    align-items: center;
+    margin: 0 auto;
+}
+
 #logo-box {
     display: flex;
     flex-direction: column;

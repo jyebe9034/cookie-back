@@ -1,18 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/dashboard}">
 <head>
     <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
 </head>
 
-<body th:replace="/layout/dashboard :: layout(~{::link},~{::section})">
-    <section id="content">
-        <div id="logo-box">
-            <div id="login-logo">tumuto</div>
-            <!-- 네이버 로그인 -->
-            <img class="social-login" th:src="@{/images/naver_button.png}">
-            <!-- 카카오 로그인 -->
-            <img class="social-login" th:src="@{/images/kakao_button.png}">
+<body>
+    <th:block layout:fragment="content">
+        <div id="content">
+            <div>
+                <div id="logo-box">
+                    <div id="login-logo">tumuto</div>
+                    <!-- 네이버 로그인 -->
+                    <img class="social-login" th:src="@{/images/naver_button.png}">
+                    <!-- 카카오 로그인 -->
+                    <img class="social-login" th:src="@{/images/kakao_button.png}">
+                </div>
+            </div>
         </div>
-    </section>
+    </th:block>
 </body>
 </html>

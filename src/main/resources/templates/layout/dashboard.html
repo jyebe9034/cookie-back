@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content, link)">
-<head th:replace="layout/header :: header(~{::link})">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>tumuto</title>
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0" />
+    <th:block th:replace="layout/header :: header"></th:block>
     <link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
-    <th:block th:replace="${link}" />
 </head>
 
 <body>
-    <section th:replace="layout/navigator :: navigator"></section>
-    <section id="body">
-        <section th:replace="${content}"></section>
-    </section>
-</body>
+    <!-- 네비게이터 -->
+    <th:block th:replace="layout/navigator :: navigator"></th:block>
 
-<footer th:replace="layout/footer :: footer"></footer>
+    <!-- 본문 -->
+    <th:block layout:fragment="content"></th:block>
+
+    <!-- 푸터 -->
+    <th:block th:replace="layout/footer :: footer"></th:block>
+</body>
 </html>
