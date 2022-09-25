@@ -1,10 +1,57 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/dashboard}">
 <head>
-    <meta charset="UTF-8">
-    <title>tumuto</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/join.css}">
 </head>
-<body>
 
+<body>
+<th:block layout:fragment="content">
+    <div id="content">
+        <div id="join">
+            <div id="login-logo">tumuto</div>
+            <div id="join-content">
+                <div class="join-line">
+                    <img id="join-user" src="/images/user.png">
+                </div>
+                <div id="join-nickname">
+                    <div class="form-floating">
+                        <p class="join-label">닉네임</p>
+                        <input type="text" class="form-control" id="floatingInputValue" placeholder="닉네임을 입력해 주세요.">
+                        <div class="invalid-feedback">닉네임을 입력해주세요.</div> <!-- input에 is-invalid 클래스 추가하면 멘트 출력 -->
+                    </div>
+                </div>
+                <div>
+                    <p class="join-label">취향 선택</p>
+                    <div id="join-taste">
+                        <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined1" autocomplete="off" value="일상">
+                        <label class="btn btn-outline-primary taste" for="btn-check-outlined1">일상</label>
+                        <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined2" autocomplete="off" value="일상">
+                        <label class="btn btn-outline-primary taste" for="btn-check-outlined2">개그</label>
+                        <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined3" autocomplete="off" value="일상">
+                        <label class="btn btn-outline-primary taste" for="btn-check-outlined3">판타지</label>
+                        <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined4" autocomplete="off" value="일상">
+                        <label class="btn btn-outline-primary taste" for="btn-check-outlined4">액션</label>
+                        <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined5" autocomplete="off" value="일상">
+                        <label class="btn btn-outline-primary taste" for="btn-check-outlined5">드라마</label><br>
+                        <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined6" autocomplete="off" value="일상">
+                        <label class="btn btn-outline-primary taste" for="btn-check-outlined6">순정</label>
+                        <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined7" autocomplete="off" value="일상">
+                        <label class="btn btn-outline-primary taste" for="btn-check-outlined7">감성</label>
+                        <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined8" autocomplete="off" value="일상">
+                        <label class="btn btn-outline-primary taste" for="btn-check-outlined8">스릴러</label>
+                        <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined9" autocomplete="off" value="일상">
+                        <label class="btn btn-outline-primary taste" for="btn-check-outlined9">무협/사극</label>
+                        <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined10" autocomplete="off" value="일상">
+                        <label class="btn btn-outline-primary taste" for="btn-check-outlined10">스포츠</label><br>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="join-button" class="btn btn-secondary" onclick="location.href='/api/test/login'">가입하기</button>
+        </div>
+    </div>
+</th:block>
 </body>
 </html>

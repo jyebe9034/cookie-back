@@ -20,4 +20,14 @@ public class MainController extends BaseController {
     public String login() {
         return "login";
     }
+
+    @GetMapping(API_PREFIX + "/test/join")
+    public String join() {
+        return "join";
+    }
+
+    @GetMapping(API_PREFIX + "/test/board")
+    public String board() {
+        return "board";
+    }
 }

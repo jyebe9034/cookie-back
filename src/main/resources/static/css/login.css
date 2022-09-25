@@ -17,6 +17,8 @@
     font-family: 'GangwonEduPowerExtraBoldA';
     color: #039870;
     font-size: 50px;
+    margin: 0 auto;
+    margin-bottom: 40px;
 }
 
 #logo-box > .social-login {
