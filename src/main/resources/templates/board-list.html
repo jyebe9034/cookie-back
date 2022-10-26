@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/dashboard}">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/board-list.css}">
+</head>
+
+<body>
+<th:block layout:fragment="content">
+    <div id="content">
+        <div>
+            <!-- 게시판 상단 -->
+            <div id="upper">
+                <div id="title">게시판</div>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="search-input" placeholder="제목을 입력해주세요.">
+                    <img id="search-icon" th:src="@{/images/search.png}">
+                </div>
+            </div>
+            <!-- 게시글 목록 -->
+            <div id="middle">
+                <div class="board-info">
+                    <!--썸네일 글제목 작성자명 작성일 조회수 좋아요수 댓글수 카테고리-->
+                    <img class="thumbnail" th:src="@{/images/thumbnail.png}">
+                    <div class="contents">
+                        <div class="title">글 제목 제목제목</div>
+                        <div>
+                            <span class="writer">작성자</span> | <span class="createDate">작성일</span>
+                        </div>
+                        <div>
+                            <img class="view-icon" th:src="@{/images/view.png}"><span class="view">3,400</span>
+                            <img class="heart-icon" th:src="@{/images/heart.png}"> <span class="like">3,400</span>
+                            <img class="comments-icon" th:src="@{/images/comments.png}"> <span class="comment">3,400</span>
+                        </div>
+                    </div>
+                    <div class="category">
+                        <div><span>드라마</span></div>
+                    </div>
+                </div>
+            </div>
+            <!-- 게시글 등록 버튼 -->
+            <div id="bottom">
+                <button type="button" id="board-button" class="btn btn-secondary">등록</button>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

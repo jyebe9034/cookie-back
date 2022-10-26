@@ -26,6 +26,11 @@ public class MainController extends BaseController {
         return "join";
     }
 
+    @GetMapping(API_PREFIX + "/test/board-list")
+    public String boardList() {
+        return "board-list";
+    }
+
     @GetMapping(API_PREFIX + "/test/board")
     public String board() {
         return "board";

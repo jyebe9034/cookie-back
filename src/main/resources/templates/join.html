@@ -19,8 +19,8 @@
                 <div id="join-nickname">
                     <div class="form-floating">
                         <p class="join-label">닉네임</p>
-                        <input type="text" class="form-control" id="floatingInputValue" placeholder="닉네임을 입력해 주세요.">
-                        <div class="invalid-feedback">닉네임을 입력해주세요.</div> <!-- input에 is-invalid 클래스 추가하면 멘트 출력 -->
+                        <input type="text" class="form-control" id="nickname" placeholder="닉네임을 입력해 주세요.">
+                        <div class="invalid-feedback">닉네임을 입력해주세요.</div>
                     </div>
                 </div>
                 <div>
@@ -47,11 +47,37 @@
                         <input type="checkbox" name="taste" class="btn-check" id="btn-check-outlined10" autocomplete="off" value="일상">
                         <label class="btn btn-outline-primary taste" for="btn-check-outlined10">스포츠</label><br>
                     </div>
+                    <div class="invalid-feedback">취향을 선택해주세요.</div>
                 </div>
             </div>
-            <button type="button" id="join-button" class="btn btn-secondary" onclick="location.href='/api/test/login'">가입하기</button>
+            <button type="button" id="join-button" class="btn btn-secondary">가입하기</button>
         </div>
     </div>
+
+    <script>
+        const userIcon = document.getElementById("join-user");
+        userIcon.addEventListener("click", () => {
+            let file = document.createElement("input");
+            file.type = "file";
+            file.click();
+        });
+
+        const nickname = document.getElementById("nickname");
+        document.getElementById("join-button").addEventListener("click", () => {
+            if (inputValidation(nickname)) {
+
+            }
+        });
+
+        function inputValidation(nickname) {
+            if (nickname.value === '') {
+                nickname.classList.add("is-invalid");
+                nickname.focus();
+                return false;
+            }
+            return true;
+        }
+    </script>
 </th:block>
 </body>
 </html>
