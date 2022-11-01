@@ -1,10 +1,62 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/dashboard}">
 <head>
-    <meta charset="UTF-8">
-    <title>tumuto</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/board.css}">
 </head>
-<body>
 
+<body>
+<th:block layout:fragment="content">
+    <div id="content">
+        <div>
+            <!-- 글 정보(카테고리, 글 제목, 프로필 이미지, 닉네임, 작성일, 조회수, 댓글 수) -->
+            <div id="info">
+                <div id="top">
+                    <div class="category">
+                        <div><span>드라마</span></div>
+                    </div>
+                    <div id="title">글 제목</div>
+                </div>
+                <div id="bottom">
+                    <img id="profile" src="/images/user.png">
+                    <div>
+                        <span id="nickname">닉네임</span>
+                        <div>
+                            <img class="clock-icon" th:src="@{/images/clock.png}"><span
+                                class="createDate">2022.10.26</span>
+                            <img class="view-icon" th:src="@{/images/view.png}"><span class="view">3,400</span>
+                            <img class="comments-icon" th:src="@{/images/comments.png}"> <span
+                                class="comment">3,400</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 글 내용 및 이미지 -->
+            <div id="middle">
+                <div id="contents">
+                    글 내용입니다 안녕하세요글 내용입니다 안녕하세요글 내용입니다 안녕하세요글 내용입니다 안녕하세요글 내용입니다 안녕하세요글 내용입니다 안녕하세요글 내용입니다 안녕하세요글 내용입니다 안녕하세요글 내용입니다
+                </div>
+                <img class="images" th:src="@{/images/mountains.png}">
+            </div>
+            <!-- 좋아요 수, 유틸 버튼(작성자에게 노출, 수정/삭제) -->
+            <div id="likes">
+                <img class="heart-icon" th:src="@{/images/heart.png}"><span id="like">3,400</span>
+                <img class="option-icon" th:src="@{/images/option.png}">
+            </div>
+            <!-- 댓글 작성 박스-->
+            <div id="comments-box">
+                <div class="form-floating">
+                    <textarea id="comment-contents" class="form-control" placeholder="Leave a comment here" style="height: 100px"></textarea>
+                </div>
+                <button type="button" id="comment-button" class="btn btn-secondary">등록</button>
+            </div>
+            <!-- 댓글 목록 -->
+            <div id="comment-list">
+            </div>
+        </div>
+    </div>
+</th:block>
 </body>
 </html>

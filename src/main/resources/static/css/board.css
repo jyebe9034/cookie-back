@@ -1,0 +1,93 @@
+#content {
+    display: block;
+}
+
+#content > div {
+    margin: 0 auto;
+    width: 90%;
+}
+
+#info {
+    height: 10%;
+}
+#info > #top {
+    display: inline-block;
+    height: 30%;
+}
+#info > #top > .category {
+    display: inline-block;
+}
+#info > #top > .category > div {
+    background-color: #A3BFA6;
+    margin-top: 25px;
+    width: 50px;
+}
+#info > #top > .category > div > span {
+    color: #fff;
+    margin: 4px;
+}
+#info > #top > #title {
+    display: inline-block;
+    font-size: 22px;
+    padding-left: 10px;
+    font-weight: bold;
+}
+#info > #bottom > img {
+    width: 50px;
+}
+#info > #bottom {
+    padding-top: 10px;
+}
+#info > #bottom > div {
+    display: inline-block;
+    padding-left: 10px;
+    vertical-align: middle;
+}
+#info > #bottom > div {
+    font-size: 14px;
+}
+#info > #bottom > div > #nickname {
+    font-size: 18px;
+}
+.clock-icon, .view-icon, .comments-icon {
+    width: 18px;
+}
+.createDate, .view, .comment {
+    vertical-align: middle;
+}
+.createDate, .view {
+    padding-left: 4px;
+}
+
+#middle {
+    padding: 20px 0;
+}
+#middle > #contents {
+    padding: 5px 0;
+}
+#middle > .images {
+    width: 100%;
+}
+
+.heart-icon, .option-icon {
+    width: 25px;
+}
+#likes > #like {
+    padding-left: 5px;
+    padding-right: 19px;
+    vertical-align: middle;
+}
+
+#comments-box {
+    padding: 7px 0;
+}
+#comments-box > .form-control {
+}
+#comments-box > #comment-button {
+    background-color: #039870;
+    border-color: #039870;
+    position: absolute;
+    float: right;
+    bottom: 101px;
+    right: 112px;
+}
